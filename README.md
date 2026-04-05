@@ -2,6 +2,8 @@
 
 Cipher experiments and puzzle-game scaffolding inspired by manga-style decoding challenges.
 
+![Manga Cover](assets/cover.png)
+
 ## Current structure
 
 ```text
