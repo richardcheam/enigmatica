@@ -10,6 +10,8 @@ from src.ciphers.hill import (
     block_mapping_trace,
     decode_hill,
     encode_hill,
+    matrix_inverse_2x2,
+    multiply_matrix_vector_2x2,
 )
 from src.ciphers.indexing import extract_text, trace_extraction
 from src.game.levels import Level
@@ -54,6 +56,8 @@ PUZZLE_02_SOURCE_CLUE = ("14", "34", "24", "69")
 PUZZLE_02_BOARD_COORDINATES = ((1, 4), (3, 4), (2, 4), (9, 6))
 PUZZLE_02_SOLUTION = extract_grid_text(PUZZLE_02_BOARD, PUZZLE_02_BOARD_COORDINATES)
 PUZZLE_03_HILL_KEY = ((9, 4), (8, 23))
+PUZZLE_03_MODULUS = len(DEFAULT_HILL_ALPHABET)
+PUZZLE_03_INVERSE_KEY = matrix_inverse_2x2(PUZZLE_03_HILL_KEY, modulus=PUZZLE_03_MODULUS)
 PUZZLE_03_CIPHERTEXT = encode_hill(
     "MISSION",
     PUZZLE_03_HILL_KEY,
@@ -67,6 +71,19 @@ PUZZLE_03_RAW_SOLUTION = decode_hill(
     pad_char=DEFAULT_PAD_CHAR,
 )
 PUZZLE_03_SOLUTION = PUZZLE_03_RAW_SOLUTION.removesuffix(DEFAULT_PAD_CHAR)
+PUZZLE_03_EXAMPLE_BLOCK = "QB"
+PUZZLE_03_EXAMPLE_VECTOR = (
+    DEFAULT_HILL_ALPHABET.index(PUZZLE_03_EXAMPLE_BLOCK[0]),
+    DEFAULT_HILL_ALPHABET.index(PUZZLE_03_EXAMPLE_BLOCK[1]),
+)
+PUZZLE_03_EXAMPLE_DECODED_VECTOR = multiply_matrix_vector_2x2(
+    PUZZLE_03_INVERSE_KEY,
+    PUZZLE_03_EXAMPLE_VECTOR,
+    modulus=PUZZLE_03_MODULUS,
+)
+PUZZLE_03_EXAMPLE_DECODED_BLOCK = "".join(
+    DEFAULT_HILL_ALPHABET[index] for index in PUZZLE_03_EXAMPLE_DECODED_VECTOR
+)
 
 
 def _format_positions(positions: tuple[int, ...]) -> str:
@@ -85,6 +102,18 @@ def _format_block_trace(trace: list[tuple[str, str]]) -> str:
     """Return block mappings for display."""
 
     return "\n".join(f"  {cipher_block} -> {plain_block}" for cipher_block, plain_block in trace)
+
+
+def _format_blocks(text: str) -> str:
+    """Render text as space-separated bigrams."""
+
+    return " ".join(text[index : index + 2] for index in range(0, len(text), 2))
+
+
+def _format_matrix(matrix: tuple[tuple[int, int], tuple[int, int]]) -> str:
+    """Render a 2x2 matrix for CLI display."""
+
+    return "\n".join(f"  [{left:>2} {right:>2}]" for left, right in matrix)
 
 
 def build_puzzle_01() -> Puzzle:
@@ -144,37 +173,39 @@ def build_puzzle_02() -> Puzzle:
 def build_puzzle_03() -> Puzzle:
     """Build the third puzzle in chapter 1."""
 
-    bigram_trace = block_mapping_trace(
-        PUZZLE_03_CIPHERTEXT,
-        PUZZLE_03_HILL_KEY,
-        alphabet=DEFAULT_HILL_ALPHABET,
-        pad_char=DEFAULT_PAD_CHAR,
-    )
-
     return Puzzle(
         id="c001-puzzle-03",
-        title="Use the Hill-cipher crib",
+        title="Use the Hill-cipher inverse matrix",
         prompt=(
-            "The last clue in chapter 1 uses a two-character Hill cipher over the alphabet "
+            "This chapter step uses a two-character Hill cipher over the alphabet "
             f"{DEFAULT_HILL_ALPHABET}.\n"
-            "You do not need to solve the matrix by hand for this game version.\n"
-            "The playable puzzle uses a shorter adapted ciphertext generated from the recovered key.\n"
-            "Recovered decoder crib:\n"
-            f"{_format_block_trace(bigram_trace)}\n"
-            f"Ciphertext: {PUZZLE_03_CIPHERTEXT}\n"
-            "Read the plaintext blocks, then remove the trailing filler character if one remains."
+            "Medium mode gives you the inverse matrix, so you do not need to derive it yourself.\n"
+            "Character values: A=0, B=1, ..., Z=25, 1=26, 2=27, 3=28, 4=29, 5=30\n"
+            "Use this inverse matrix:\n"
+            f"{_format_matrix(PUZZLE_03_INVERSE_KEY)}\n"
+            "Treat each block XY as the column vector [x, y]^T, multiply modulo 31, then convert "
+            "the result back into characters.\n"
+            f"Ciphertext blocks: {_format_blocks(PUZZLE_03_CIPHERTEXT)}\n"
+            "Decode all four blocks, join the plaintext, then remove the trailing filler character '3'."
         ),
         expected_answer=PUZZLE_03_SOLUTION,
-        hint="The last plaintext block ends with the filler symbol '3', so drop it after decoding.",
+        hint=(
+            "Worked example: QB -> [16,1]. Applying the inverse matrix gives [12,8], which maps to MI."
+        ),
         metadata={
-            "mechanic": "hill-cipher-crib",
+            "mechanic": "hill-cipher-medium",
             "chapter_puzzle_number": 3,
             "asset_path": "assets/chapters/c001/puzzle-03.png",
             "alphabet": DEFAULT_HILL_ALPHABET,
             "pad_char": DEFAULT_PAD_CHAR,
-            "adapted_for_gameplay": True,
+            "mode": "medium",
             "ciphertext": PUZZLE_03_CIPHERTEXT,
             "key_matrix": PUZZLE_03_HILL_KEY,
+            "inverse_key_matrix": PUZZLE_03_INVERSE_KEY,
+            "example_block": PUZZLE_03_EXAMPLE_BLOCK,
+            "example_vector": PUZZLE_03_EXAMPLE_VECTOR,
+            "example_decoded_vector": PUZZLE_03_EXAMPLE_DECODED_VECTOR,
+            "example_decoded_block": PUZZLE_03_EXAMPLE_DECODED_BLOCK,
             "raw_solution": PUZZLE_03_RAW_SOLUTION,
         },
     )
@@ -244,10 +275,16 @@ def render_demo() -> str:
             f"Answer:    {PUZZLE_02_SOLUTION}",
             "",
             "Puzzle 3",
-            "Mechanic: game-friendly Hill cipher crib",
-            f"Alphabet:  {DEFAULT_HILL_ALPHABET}",
-            f"Ciphertext: {PUZZLE_03_CIPHERTEXT}",
-            f"Trace:\n{_format_block_trace(puzzle_03_trace)}",
+            "Mechanic: medium-mode Hill cipher",
+            "Character values: A=0..Z=25, 1=26..5=30",
+            f"Inverse matrix:\n{_format_matrix(PUZZLE_03_INVERSE_KEY)}",
+            f"Ciphertext blocks: {_format_blocks(PUZZLE_03_CIPHERTEXT)}",
+            (
+                "Worked example: "
+                f"{PUZZLE_03_EXAMPLE_BLOCK} -> {list(PUZZLE_03_EXAMPLE_VECTOR)} -> "
+                f"{list(PUZZLE_03_EXAMPLE_DECODED_VECTOR)} -> {PUZZLE_03_EXAMPLE_DECODED_BLOCK}"
+            ),
+            f"Full decode:\n{_format_block_trace(puzzle_03_trace)}",
             f"Decoded:   {PUZZLE_03_RAW_SOLUTION}",
             f"Answer:    {PUZZLE_03_SOLUTION}",
             "",

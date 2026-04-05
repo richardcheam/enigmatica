@@ -7,17 +7,13 @@ This chapter can contain one puzzle or several puzzle beats.
 - Store images under `assets/chapters/cXXX/`.
 - Prefer names like `puzzle-01.png`, `puzzle-02.png`, and so on.
 
-```md
 ![Puzzle 1 snapshot](../../assets/chapters/cXXX/puzzle-01.png)
-```
 
 ## Puzzle 1 - Title
 
 ### Snapshot
 
-```md
 ![Puzzle 1 snapshot](../../assets/chapters/cXXX/puzzle-01.png)
-```
 
 ### Observed Data
 
