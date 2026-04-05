@@ -1,0 +1,20 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "enigmatica"
+version = "0.1.0"
+description = "Cipher experiments and puzzle-game scaffolding inspired by manga decoding challenges."
+readme = "README.md"
+requires-python = ">=3.11"
+
+[dependency-groups]
+dev = []
+
+[project.scripts]
+enigmatica = "src.main:main"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["src*"]
