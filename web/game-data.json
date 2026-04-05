@@ -2,6 +2,7 @@
   "app": {
     "title": "Enigmatica",
     "tagline": "Decode the manga, one chapter at a time.",
+    "repository_url": "https://github.com/richardcheam/enigmatica",
     "cover_image_path": "assets/horizontal-cover.png"
   },
   "chapters": [
@@ -11,6 +12,7 @@
       "description": "Chapter 1 now chains indexing, board extraction, and a guided Hill-cipher reveal.",
       "level_id": "level-c001",
       "chapter_note_path": "docs/chapters/c001.md",
+      "chapter_note_url": "https://github.com/richardcheam/enigmatica/blob/main/docs/chapters/c001.md",
       "puzzles": [
         {
           "id": "c001-puzzle-01",

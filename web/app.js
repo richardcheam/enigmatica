@@ -221,8 +221,8 @@ function renderPlayStage() {
   elements.playChapterDescription.textContent = chapter.description;
   elements.puzzleFlowLabel.textContent = `${chapter.puzzles.length} sequential ${copy.play.puzzleFallback.toLowerCase()}${chapter.puzzles.length === 1 ? "" : "s"}`;
 
-  if (chapter.chapter_note_path) {
-    elements.chapterNotesLink.href = `./${chapter.chapter_note_path}`;
+  if (chapter.chapter_note_url || chapter.chapter_note_path) {
+    elements.chapterNotesLink.href = chapter.chapter_note_url || `./${chapter.chapter_note_path}`;
     elements.chapterNotesLink.hidden = false;
   } else {
     elements.chapterNotesLink.hidden = true;

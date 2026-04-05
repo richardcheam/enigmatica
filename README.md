@@ -13,6 +13,7 @@ docs/
 ├── chapters/   # chapter notes, reasoning, and image references
 scripts/
 ├── export_web_data.py  # exports static chapter data for the GitHub Pages frontend
+├── build_pages_bundle.py  # stages a clean static bundle for GitHub Pages deployment
 src/
 ├── chapters/   # chapter-specific demos and level builders
 ├── ciphers/    # reusable cipher and analysis logic
@@ -56,13 +57,37 @@ python3 -m src.main play c001
 ## Web interface
 
 ```bash
-python3 scripts/export_web_data.py
-python3 -m http.server
+UV_CACHE_DIR="$PWD/.uv-cache" uv run python scripts/export_web_data.py
+uv run python -m http.server
 ```
 
 - Open `http://localhost:8000` to preview the static frontend locally.
 - The site reads `web/game-data.json`, which is generated from the Python chapter definitions.
 - For GitHub Pages, serve the repository root so `index.html` is the entry point.
+
+## GitHub Pages
+
+This repo is set up to deploy publicly with GitHub Pages through GitHub Actions.
+
+Workflow:
+
+- `.github/workflows/deploy-pages.yml` runs on pushes to `main`
+- `scripts/build_pages_bundle.py` regenerates `web/game-data.json`
+- the workflow stages a clean `.site-dist/` bundle
+- GitHub Pages deploys that static artifact
+
+One-time GitHub setup:
+
+1. Push this repo to GitHub.
+2. Open `Settings -> Pages`.
+3. Under `Build and deployment`, set `Source` to `GitHub Actions`.
+4. Push to `main` again or run the workflow manually from the `Actions` tab.
+
+Notes:
+
+- The public site will be available at `https://richardcheam.github.io/enigmatica/` once Pages is enabled.
+- Chapter note links on the public site are routed to the GitHub repository view rather than raw markdown files on Pages.
+- If you change chapter data, the deployment workflow will rebuild the exported JSON automatically.
 
 ## uv environment
 

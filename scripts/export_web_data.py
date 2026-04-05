@@ -8,6 +8,8 @@ from pathlib import Path
 from typing import Any
 
 ROOT = Path(__file__).resolve().parent.parent
+REPOSITORY_URL = "https://github.com/richardcheam/enigmatica"
+DEFAULT_BRANCH = "main"
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
@@ -33,6 +35,11 @@ def build_payload() -> dict[str, Any]:
         level = chapter.build_level()
         chapter_note_path = f"docs/chapters/{chapter.code}.md"
         note_exists = (ROOT / chapter_note_path).exists()
+        chapter_note_url = (
+            f"{REPOSITORY_URL}/blob/{DEFAULT_BRANCH}/{chapter_note_path}"
+            if note_exists
+            else None
+        )
         puzzles: list[dict[str, Any]] = []
 
         for puzzle in level.puzzles:
@@ -58,6 +65,7 @@ def build_payload() -> dict[str, Any]:
                 "description": chapter.description,
                 "level_id": level.id,
                 "chapter_note_path": chapter_note_path if note_exists else None,
+                "chapter_note_url": chapter_note_url,
                 "puzzles": puzzles,
             }
         )
@@ -66,6 +74,7 @@ def build_payload() -> dict[str, Any]:
         "app": {
             "title": "Enigmatica",
             "tagline": "Decode the manga, one chapter at a time.",
+            "repository_url": REPOSITORY_URL,
             "cover_image_path": (
                 "assets/horizontal-cover.png"
                 if (ROOT / "assets/horizontal-cover.png").exists()
