@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Enigmatica · Play</title>
+    <meta
+      name="description"
+      content="Play Enigmatica chapter puzzles one step at a time."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Space+Grotesk:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./web/styles.css" />
+  </head>
+  <body>
+    <div class="page-shell">
+      <header class="topbar">
+        <a class="brand" href="./index.html">
+          <span class="brand-mark">E</span>
+          <span class="brand-copy">
+            <span class="brand-name" id="brandName">ENIGMATICA</span>
+            <span class="brand-subtitle" id="brandSubtitle">Interactive mode</span>
+          </span>
+        </a>
+        <div class="topbar-actions">
+          <a class="ghost-button" id="homeLink" href="./index.html">Home</a>
+          <span class="progress-pill" id="overallProgress">0 / 0 solved</span>
+          <button class="ghost-button" id="resetProgressButton" type="button">
+            Reset Progress
+          </button>
+        </div>
+      </header>
+
+      <main class="play-screen">
+        <section class="card play-stage-card">
+          <div class="play-stage-header">
+            <div>
+              <div class="eyebrow" id="playModeEyebrow">Interactive Mode</div>
+              <h1 class="play-title" id="playChapterTitle">Chapter</h1>
+              <p class="play-copy" id="playChapterDescription"></p>
+            </div>
+            <div class="play-stage-actions">
+              <span class="progress-pill" id="chapterProgressLabel">0 / 0 solved</span>
+              <a class="inline-link" id="chapterNotesLink" href="./docs/chapters/index.md">
+                Open chapter notes
+              </a>
+            </div>
+          </div>
+          <section class="card chapter-stage chapter-stage-inner">
+            <div class="section-heading">
+              <span class="eyebrow" id="puzzleFlowEyebrow">Puzzle Flow</span>
+              <span class="subtle-label" id="puzzleFlowLabel">Sequential unlocks</span>
+            </div>
+            <div class="puzzle-nav" id="puzzleNav"></div>
+          </section>
+        </section>
+
+        <section class="play-workspace">
+          <section class="card puzzle-card">
+            <div class="puzzle-header">
+              <div>
+                <div class="eyebrow" id="puzzleEyebrow">Puzzle</div>
+                <h2 id="puzzleTitle">Loading...</h2>
+              </div>
+              <span class="mechanic-chip" id="mechanicChip">Mechanic</span>
+            </div>
+
+            <div class="puzzle-media" id="puzzleMedia"></div>
+            <div class="puzzle-clue" id="puzzleClue"></div>
+
+            <div class="prompt-block">
+              <div class="eyebrow" id="instructionEyebrow">Instruction</div>
+              <p id="puzzlePrompt"></p>
+            </div>
+
+            <form class="answer-form" id="answerForm">
+              <label class="answer-label" id="answerLabel" for="answerInput">Your answer</label>
+              <div class="answer-row">
+                <input
+                  id="answerInput"
+                  name="answer"
+                  type="text"
+                  autocomplete="off"
+                  spellcheck="false"
+                  placeholder="Type your guess"
+                />
+                <button class="primary-button" id="submitButton" type="submit">Submit</button>
+              </div>
+            </form>
+
+            <div class="feedback-row">
+              <button class="ghost-button" id="hintButton" type="button">Show Hint</button>
+              <button class="ghost-button" id="continueButton" type="button" hidden>
+                Continue
+              </button>
+            </div>
+
+            <div class="hint-box" id="hintBox" hidden></div>
+            <div class="status-box" id="statusBox" aria-live="polite"></div>
+          </section>
+        </section>
+      </main>
+    </div>
+
+    <script src="./web/site-copy.js"></script>
+    <script src="./web/shared.js"></script>
+    <script src="./web/app.js"></script>
+  </body>
+</html>

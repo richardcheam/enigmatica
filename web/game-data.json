@@ -1,0 +1,158 @@
+{
+  "app": {
+    "title": "Enigmatica",
+    "tagline": "Decode the manga, one chapter at a time.",
+    "cover_image_path": "assets/horizontal-cover.png"
+  },
+  "chapters": [
+    {
+      "code": "c001",
+      "title": "Chapter 1: 12 HOURS LEFT TO LIVE",
+      "description": "Chapter 1 now chains indexing, board extraction, and a guided Hill-cipher reveal.",
+      "level_id": "level-c001",
+      "chapter_note_path": "docs/chapters/c001.md",
+      "puzzles": [
+        {
+          "id": "c001-puzzle-01",
+          "title": "Read the numbered letters",
+          "prompt": "A strip of letters appears above a row of numbers.\nLetters:   ARTOYGDWEASOTUIBOVIAFFQKJI\nPositions: 06 09 03 03 04 08 04 02 24\nUse the numbers as direct indexes into the letter strip and enter the decoded phrase.",
+          "expected_answer": "Get To Work",
+          "hint": "Treat the strip as 1-based indexed: 1=A, 2=R, 3=T, and so on.",
+          "metadata": {
+            "mechanic": "index-extraction",
+            "chapter_puzzle_number": 1,
+            "asset_path": "assets/chapters/c001/puzzle-01.png",
+            "letter_strip": "ARTOYGDWEASOTUIBOVIAFFQKJI",
+            "positions": [
+              6,
+              9,
+              3,
+              3,
+              4,
+              8,
+              4,
+              2,
+              24
+            ],
+            "raw_solution": "GETTOWORK",
+            "asset_exists": true
+          }
+        },
+        {
+          "id": "c001-puzzle-02",
+          "title": "Find the warning in the board",
+          "prompt": "A second clue uses a larger board reference.\nBoard:\n01: VL1NK JOLQ3\n02: QCOSF IA4K1\n03: 1MV1F PEGBZ\n04: TARM2 5YFOX\n05: KQWKX OAPPQ\n06: EU3FL DYZPM\n07: MZXIY OYZEX\n08: XYMHQ OUNGL\n09: I1QOF BNDEH\n10: 443VL UPDME\n11: AWELB 21NB2\n12: EAB2H BUOJ3\nSource clue: 14 34 24 69\nUse the board to recover the four-letter warning.",
+          "expected_answer": "TRAP",
+          "hint": "Read the board as a grid. The first three letters sit on row 4 and spell T, R, A.",
+          "metadata": {
+            "mechanic": "grid-extraction",
+            "chapter_puzzle_number": 2,
+            "asset_path": "assets/chapters/c001/puzzle-02.png",
+            "left_block": [
+              "VL1NK",
+              "QCOSF",
+              "1MV1F",
+              "TARM2",
+              "KQWKX",
+              "EU3FL",
+              "MZXIY",
+              "XYMHQ",
+              "I1QOF",
+              "443VL",
+              "AWELB",
+              "EAB2H"
+            ],
+            "right_block": [
+              "JOLQ3",
+              "IA4K1",
+              "PEGBZ",
+              "5YFOX",
+              "OAPPQ",
+              "DYZPM",
+              "OYZEX",
+              "OUNGL",
+              "BNDEH",
+              "UPDME",
+              "21NB2",
+              "BUOJ3"
+            ],
+            "source_clue": [
+              "14",
+              "34",
+              "24",
+              "69"
+            ],
+            "board_coordinates": [
+              [
+                1,
+                4
+              ],
+              [
+                3,
+                4
+              ],
+              [
+                2,
+                4
+              ],
+              [
+                9,
+                6
+              ]
+            ],
+            "raw_solution": "TRAP",
+            "asset_exists": true
+          }
+        },
+        {
+          "id": "c001-puzzle-03",
+          "title": "Use the Hill-cipher inverse matrix",
+          "prompt": "This chapter step uses a two-character Hill cipher over the alphabet ABCDEFGHIJKLMNOPQRSTUVWXYZ12345.\nMedium mode gives you the inverse matrix, so you do not need to derive it yourself.\nCharacter values: A=0, B=1, ..., Z=25, 1=26, 2=27, 3=28, 4=29, 5=30\nUse this inverse matrix:\n  [12  6]\n  [12  2]\nTreat each block XY as the column vector [x, y]^T, multiply modulo 31, then convert the result back into characters.\nCiphertext blocks: QB RA EO ME\nDecode all four blocks, join the plaintext, then remove the trailing filler character '3'.",
+          "expected_answer": "MISSION",
+          "hint": "Worked example: QB -> [16,1]. Applying the inverse matrix gives [12,8], which maps to MI.",
+          "metadata": {
+            "mechanic": "hill-cipher-medium",
+            "chapter_puzzle_number": 3,
+            "asset_path": "assets/chapters/c001/puzzle-03.png",
+            "alphabet": "ABCDEFGHIJKLMNOPQRSTUVWXYZ12345",
+            "pad_char": "3",
+            "mode": "medium",
+            "ciphertext": "QBRAEOME",
+            "key_matrix": [
+              [
+                9,
+                4
+              ],
+              [
+                8,
+                23
+              ]
+            ],
+            "inverse_key_matrix": [
+              [
+                12,
+                6
+              ],
+              [
+                12,
+                2
+              ]
+            ],
+            "example_block": "QB",
+            "example_vector": [
+              16,
+              1
+            ],
+            "example_decoded_vector": [
+              12,
+              8
+            ],
+            "example_decoded_block": "MI",
+            "raw_solution": "MISSION3",
+            "asset_exists": false
+          }
+        }
+      ]
+    }
+  ]
+}
