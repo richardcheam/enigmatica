@@ -8,7 +8,7 @@ from pathlib import Path
 from export_web_data import ROOT, main as export_web_data_main
 
 DIST_DIR = ROOT / ".site-dist"
-FILES_TO_COPY = ["index.html", "play.html", ".nojekyll"]
+FILES_TO_COPY = ["index.html", "play.html"]
 DIRS_TO_COPY = ["assets", "web"]
 
 
@@ -40,12 +40,19 @@ def _copy_static_files() -> None:
             )
 
 
+def _write_pages_markers() -> None:
+    """Write GitHub Pages marker files directly into the bundle."""
+
+    (DIST_DIR / ".nojekyll").write_text("", encoding="utf-8")
+
+
 def main() -> int:
     """Export fresh game data and stage the GitHub Pages bundle."""
 
     export_web_data_main()
     _reset_dist_dir()
     _copy_static_files()
+    _write_pages_markers()
     print(f"Built {DIST_DIR.relative_to(ROOT)}")
     return 0
 

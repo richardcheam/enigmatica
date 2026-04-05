@@ -91,6 +91,6 @@ Notes:
 
 ## uv environment
 
-- The repo uses `.python-version` to pin local development to Python 3.12.
 - Run `uv sync` to create `.venv` from `pyproject.toml`.
 - Use `uv run ...` so you do not accidentally use a system `python3` that is too old for the project.
+- If you like using `pyenv` or a local Python pin, keep a private `.python-version` file locally; it is intentionally not tracked.
