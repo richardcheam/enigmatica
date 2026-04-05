@@ -1,4 +1,4 @@
-# ENIGMATICA
+# E N I G M A T I C A
 
 Cipher experiments and puzzle-game scaffolding inspired by manga-style decoding challenges.
 
