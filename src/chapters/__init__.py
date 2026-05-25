@@ -4,9 +4,11 @@ from __future__ import annotations
 
 from .base import Chapter
 from .c001 import CHAPTER as C001
+from .c002 import CHAPTER as C002
 
 CHAPTERS: dict[str, Chapter] = {
     C001.code: C001,
+    C002.code: C002,
 }
 
 

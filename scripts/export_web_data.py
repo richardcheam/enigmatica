@@ -44,8 +44,10 @@ def build_payload() -> dict[str, Any]:
 
         for puzzle in level.puzzles:
             metadata = _to_json_value(puzzle.metadata)
-            asset_path = metadata.get("asset_path")
-            metadata["asset_exists"] = bool(asset_path and (ROOT / asset_path).exists())
+            for key, asset_path in tuple(metadata.items()):
+                if key.endswith("_asset_path"):
+                    exists_key = f"{key.removesuffix('_path')}_exists"
+                    metadata[exists_key] = bool(asset_path and (ROOT / asset_path).exists())
 
             puzzles.append(
                 {

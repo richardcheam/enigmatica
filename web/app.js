@@ -293,10 +293,7 @@ function renderPuzzle() {
     : copy.play.answerPlaceholder;
 
   elements.puzzleMedia.innerHTML = "";
-  const imageFrame = renderPuzzleImage(puzzle);
-  if (imageFrame) {
-    elements.puzzleMedia.append(imageFrame);
-  }
+  renderPuzzleImages(puzzle).forEach((imageFrame) => elements.puzzleMedia.append(imageFrame));
 
   elements.puzzleClue.innerHTML = "";
   elements.puzzleClue.append(renderMechanicClue(puzzle));
@@ -310,15 +307,30 @@ function renderPuzzle() {
   }
 }
 
-function renderPuzzleImage(puzzle) {
-  const assetPath = puzzle.metadata.asset_path;
-  if (!assetPath || !puzzle.metadata.asset_exists) {
-    return null;
+function renderPuzzleImages(puzzle) {
+  const images = [];
+  if (puzzle.metadata.rule_asset_path && puzzle.metadata.rule_asset_exists) {
+    images.push(
+      renderPuzzleImage(puzzle.metadata.rule_asset_path, `${puzzle.title} rule reference`, copy.play.ruleSnapshot),
+    );
   }
 
+  if (puzzle.metadata.asset_path && puzzle.metadata.asset_exists) {
+    images.push(
+      renderPuzzleImage(puzzle.metadata.asset_path, puzzle.title, copy.play.sourceSnapshot),
+    );
+  }
+
+  return images;
+}
+
+function renderPuzzleImage(assetPath, altText, label) {
   const frame = document.createElement("div");
   frame.className = "puzzle-image-frame";
-  frame.innerHTML = `<img src="./${assetPath}" alt="${puzzle.title}" />`;
+  frame.innerHTML = `
+    <span class="puzzle-image-label">${label}</span>
+    <img src="./${assetPath}" alt="${altText}" />
+  `;
   return frame;
 }
 
@@ -379,6 +391,25 @@ ${shared.formatMatrix(puzzle.metadata.inverse_key_matrix)}
         <div class="matrix-card">
           <span class="label">${copy.play.clueCiphertextBlocks}</span>
           ${shared.chunkPairs(puzzle.metadata.ciphertext)}
+        </div>
+      </div>
+    `;
+    return panel;
+  }
+
+  if (mechanic === "polybius-square") {
+    panel.innerHTML = `
+      <div class="clue-grid">
+        <div>
+          <span class="label">${copy.play.cluePolybiusBoard}</span>
+          <pre class="board-pre">    1 2 3 4 5
+${puzzle.metadata.board_rows
+  .map((row, index) => `${index + 1}:  ${row.split("").join(" ")}`)
+  .join("\n")}</pre>
+        </div>
+        <div>
+          <span class="label">${copy.play.cluePlayableCoordinates}</span>
+          <div class="mono-block">${puzzle.metadata.playable_coordinates}</div>
         </div>
       </div>
     `;

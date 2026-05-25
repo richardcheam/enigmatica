@@ -36,8 +36,7 @@
               2,
               24
             ],
-            "raw_solution": "GETTOWORK",
-            "asset_exists": true
+            "raw_solution": "GETTOWORK"
           }
         },
         {
@@ -102,8 +101,7 @@
                 6
               ]
             ],
-            "raw_solution": "TRAP",
-            "asset_exists": true
+            "raw_solution": "TRAP"
           }
         },
         {
@@ -150,8 +148,42 @@
               8
             ],
             "example_decoded_block": "MI",
-            "raw_solution": "MISSION3",
-            "asset_exists": false
+            "raw_solution": "MISSION3"
+          }
+        }
+      ]
+    },
+    {
+      "code": "c002",
+      "title": "Chapter 2",
+      "description": "Chapter 2 introduces a Polybius checkerboard puzzle with row-column decoding.",
+      "level_id": "level-c002",
+      "chapter_note_path": "docs/chapters/c002.md",
+      "chapter_note_url": "https://github.com/richardcheam/enigmatica/blob/main/docs/chapters/c002.md",
+      "puzzles": [
+        {
+          "id": "c002-puzzle-01",
+          "title": "Read the Polybius checkerboard",
+          "prompt": "A Polybius checkerboard stores each letter as two digits: row first, then column.\nBoard:\n    1 2 3 4 5\n1:  A B C D E\n2:  F G H I K\n3:  L M N O P\n4:  Q R S T U\n5:  V W X Y Z\nPlayable coordinate clue: 42 11 12 12 24 44\nDecode the coordinate pairs and enter the recovered word.",
+          "expected_answer": "RABBIT",
+          "hint": "Start with 42: row 4, column 2 points to R.",
+          "metadata": {
+            "mechanic": "polybius-square",
+            "chapter_puzzle_number": 1,
+            "asset_path": "assets/chapters/c002/puzzle-01.png",
+            "rule_asset_path": "assets/chapters/c002/rule-puzzle-01.png",
+            "board_rows": [
+              "ABCDE",
+              "FGHIK",
+              "LMNOP",
+              "QRSTU",
+              "VWXYZ"
+            ],
+            "source_digits": "631121213224",
+            "playable_coordinates": "42 11 12 12 24 44",
+            "raw_solution": "RABBIT",
+            "source_discrepancy": "The supplied cropped digit clue does not decode to RABBIT using the shown standard checkerboard. The playable clue uses verified coordinates.",
+            "rule_asset_exists": true
           }
         }
       ]

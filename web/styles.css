@@ -513,14 +513,27 @@ a {
 }
 
 .puzzle-media {
+  display: grid;
+  gap: 0.85rem;
   margin: 1rem 0 1.05rem;
 }
 
 .puzzle-image-frame {
+  position: relative;
   overflow: hidden;
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: calc(var(--radius-xl) - 10px);
   background: rgba(255, 255, 255, 0.04);
+}
+
+.puzzle-image-label {
+  display: block;
+  padding: 0.7rem 0.9rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  color: var(--ink-soft);
+  font-size: 0.74rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
 }
 
 .puzzle-image-frame img {

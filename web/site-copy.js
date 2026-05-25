@@ -73,6 +73,10 @@
       clueAlphabet: "Alphabet",
       clueInverseMatrix: "Inverse Matrix",
       clueCiphertextBlocks: "Ciphertext Blocks",
+      cluePolybiusBoard: "Polybius Board",
+      cluePlayableCoordinates: "Playable Coordinates",
+      sourceSnapshot: "Source Snapshot",
+      ruleSnapshot: "Rule Reference",
     },
     interface: {
       dataLoadError:
