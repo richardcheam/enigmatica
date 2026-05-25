@@ -1,12 +1,11 @@
-"""Chapter 2 built around a Polybius checkerboard puzzle."""
+"""Chapter 2 puzzles built around an alphanumeric checkerboard."""
 
 from __future__ import annotations
 
 from src.chapters.base import Chapter
 from src.ciphers.polybius import (
-    DEFAULT_POLYBIUS_ROWS,
+    ALPHANUMERIC_POLYBIUS_ROWS,
     decode_polybius,
-    encode_polybius,
     trace_polybius_decode,
 )
 from src.game.levels import Level
@@ -15,15 +14,26 @@ from src.game.puzzle import Puzzle
 CHAPTER_CODE = "c002"
 CHAPTER_TITLE = "Chapter 2: 3 HOURS LEFT TO LIVE"
 PUZZLE_01_SOURCE_DIGITS = "631121213224"
-PUZZLE_01_ANSWER = "RABBIT"
-PUZZLE_01_PLAYABLE_COORDINATES = encode_polybius(PUZZLE_01_ANSWER)
-PUZZLE_01_DECODED = decode_polybius(PUZZLE_01_PLAYABLE_COORDINATES)
+PUZZLE_01_COORDINATE_ORDER = "column-row"
+PUZZLE_01_SOLUTION = decode_polybius(
+    PUZZLE_01_SOURCE_DIGITS,
+    rows=ALPHANUMERIC_POLYBIUS_ROWS,
+    coordinate_order=PUZZLE_01_COORDINATE_ORDER,
+)
+PUZZLE_02_SOURCE_DIGITS = "31433141122336422214115131115154654222"
+PUZZLE_02_COORDINATE_ORDER = "row-column"
+PUZZLE_02_RAW_SOLUTION = decode_polybius(
+    PUZZLE_02_SOURCE_DIGITS,
+    rows=ALPHANUMERIC_POLYBIUS_ROWS,
+    coordinate_order=PUZZLE_02_COORDINATE_ORDER,
+)
+PUZZLE_02_FORMATTED_SOLUTION = "MUM'S BIRTHDAY MAY 29TH"
 
 
 def _format_board(rows: tuple[str, ...]) -> str:
-    """Return the checkerboard with coordinate labels for CLI display."""
+    """Return the six-by-six checkerboard for CLI display."""
 
-    header = "    1 2 3 4 5"
+    header = "    1 2 3 4 5 6"
     body = [
         f"{row_index}:  {' '.join(row)}"
         for row_index, row in enumerate(rows, start=1)
@@ -31,33 +41,60 @@ def _format_board(rows: tuple[str, ...]) -> str:
     return "\n".join([header, *body])
 
 
+def _cli_prompt(encoded: str, instruction: str) -> str:
+    """Render the image-backed puzzle in a terminal-friendly form."""
+
+    return (
+        f"Reference board:\n{_format_board(ALPHANUMERIC_POLYBIUS_ROWS)}\n"
+        f"Digit string: {encoded}\n"
+        f"\n{instruction}"
+    )
+
+
 def build_puzzle_01() -> Puzzle:
-    """Build the Polybius checkerboard puzzle."""
+    """Build the rabbit checkerboard puzzle from the source panels."""
 
     return Puzzle(
         id="c002-puzzle-01",
-        title="Read the Polybius checkerboard",
-        prompt=(
-            "A Polybius checkerboard stores each letter as two digits: row first, then column.\n"
-            f"Board:\n{_format_board(DEFAULT_POLYBIUS_ROWS)}\n"
-            f"Playable coordinate clue: {PUZZLE_01_PLAYABLE_COORDINATES}\n"
-            "Decode the coordinate pairs and enter the recovered word."
-        ),
-        expected_answer=PUZZLE_01_ANSWER,
-        hint="Start with 42: row 4, column 2 points to R.",
+        title="Decode the digit string",
+        prompt=_cli_prompt(PUZZLE_01_SOURCE_DIGITS, "Recover the hidden word."),
+        expected_answer=PUZZLE_01_SOLUTION,
+        hint="For this clue, read a pair as column first, then row.",
         metadata={
-            "mechanic": "polybius-square",
+            "mechanic": "alphanumeric-checkerboard",
             "chapter_puzzle_number": 1,
             "asset_path": "assets/chapters/c002/puzzle-01.png",
-            "rule_asset_path": "assets/chapters/c002/rule-puzzle-01.png",
-            "board_rows": DEFAULT_POLYBIUS_ROWS,
+            "rule_asset_path": "assets/chapters/c002/puzzle-01-rule.png",
+            "web_prompt": "Recover the hidden word.",
+            "image_only_clue": True,
+            "board_rows": ALPHANUMERIC_POLYBIUS_ROWS,
             "source_digits": PUZZLE_01_SOURCE_DIGITS,
-            "playable_coordinates": PUZZLE_01_PLAYABLE_COORDINATES,
-            "raw_solution": PUZZLE_01_DECODED,
-            "source_discrepancy": (
-                "The supplied cropped digit clue does not decode to RABBIT using the "
-                "shown standard checkerboard. The playable clue uses verified coordinates."
-            ),
+            "coordinate_order": PUZZLE_01_COORDINATE_ORDER,
+            "raw_solution": PUZZLE_01_SOLUTION,
+        },
+    )
+
+
+def build_puzzle_02() -> Puzzle:
+    """Build the longer checkerboard message from the source panel."""
+
+    return Puzzle(
+        id="c002-puzzle-02",
+        title="Decode the written message",
+        prompt=_cli_prompt(PUZZLE_02_SOURCE_DIGITS, "Recover the hidden message."),
+        expected_answer=PUZZLE_02_FORMATTED_SOLUTION,
+        hint="For this clue, read a pair as row first, then column.",
+        metadata={
+            "mechanic": "alphanumeric-checkerboard",
+            "chapter_puzzle_number": 2,
+            "asset_path": "assets/chapters/c002/puzzle-02.png",
+            "rule_asset_path": "assets/chapters/c002/puzzle-01-rule.png",
+            "web_prompt": "Recover the hidden message.",
+            "image_only_clue": True,
+            "board_rows": ALPHANUMERIC_POLYBIUS_ROWS,
+            "source_digits": PUZZLE_02_SOURCE_DIGITS,
+            "coordinate_order": PUZZLE_02_COORDINATE_ORDER,
+            "raw_solution": PUZZLE_02_RAW_SOLUTION,
         },
     )
 
@@ -65,7 +102,7 @@ def build_puzzle_01() -> Puzzle:
 def build_puzzles() -> list[Puzzle]:
     """Build all currently implemented puzzles for chapter 2."""
 
-    return [build_puzzle_01()]
+    return [build_puzzle_01(), build_puzzle_02()]
 
 
 def build_level() -> Level:
@@ -74,29 +111,42 @@ def build_level() -> Level:
     return Level(
         id="level-c002",
         title=CHAPTER_TITLE,
-        description="Chapter 2: 3 HOURS LEFT TO LIVE introduces Polybius checkerboard coordinate decoding.",
+        description=(
+            "Chapter 2 introduces a six-by-six checkerboard that can encode letters "
+            "and digits as coordinate pairs."
+        ),
         puzzles=build_puzzles(),
         chapter_code=CHAPTER_CODE,
     )
 
 
 def render_demo() -> str:
-    """Render a non-interactive preview of the chapter mechanic."""
+    """Render a non-interactive preview of the chapter puzzles."""
 
-    trace = trace_polybius_decode(PUZZLE_01_PLAYABLE_COORDINATES)
+    first_trace = trace_polybius_decode(
+        PUZZLE_01_SOURCE_DIGITS,
+        rows=ALPHANUMERIC_POLYBIUS_ROWS,
+        coordinate_order=PUZZLE_01_COORDINATE_ORDER,
+    )
+    second_trace = trace_polybius_decode(
+        PUZZLE_02_SOURCE_DIGITS,
+        rows=ALPHANUMERIC_POLYBIUS_ROWS,
+        coordinate_order=PUZZLE_02_COORDINATE_ORDER,
+    )
     return "\n".join(
         [
-            "Chapter structure: single-puzzle level",
-            "Mechanic: Polybius checkerboard",
+            "Chapter structure: two-puzzle level",
+            "Mechanic: alphanumeric checkerboard",
             "",
-            _format_board(DEFAULT_POLYBIUS_ROWS),
+            _format_board(ALPHANUMERIC_POLYBIUS_ROWS),
             "",
-            f"Playable clue: {PUZZLE_01_PLAYABLE_COORDINATES}",
-            f"Trace: {' '.join(f'{coordinate}->{letter}' for coordinate, letter in trace)}",
-            f"Answer: {PUZZLE_01_DECODED}",
+            f"Puzzle 1 clue: {PUZZLE_01_SOURCE_DIGITS}",
+            f"Trace: {' '.join(f'{coordinate}->{letter}' for coordinate, letter in first_trace)}",
+            f"Answer: {PUZZLE_01_SOLUTION}",
             "",
-            f"Source crop digits retained for documentation: {PUZZLE_01_SOURCE_DIGITS}",
-            "Note: those source digits do not decode to RABBIT under the displayed board.",
+            f"Puzzle 2 clue: {PUZZLE_02_SOURCE_DIGITS}",
+            f"Trace: {' '.join(f'{coordinate}->{letter}' for coordinate, letter in second_trace)}",
+            f"Answer: {PUZZLE_02_FORMATTED_SOLUTION}",
         ]
     )
 
@@ -104,7 +154,9 @@ def render_demo() -> str:
 CHAPTER = Chapter(
     code=CHAPTER_CODE,
     title=CHAPTER_TITLE,
-    description="Chapter 2 introduces a Polybius checkerboard puzzle with row-column decoding.",
+    description=(
+        "Chapter 2 introduces a six-by-six checkerboard and two coordinate-decoding puzzles."
+    ),
     build_level=build_level,
     render_demo=render_demo,
 )

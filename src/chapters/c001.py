@@ -123,10 +123,9 @@ def build_puzzle_01() -> Puzzle:
         id="c001-puzzle-01",
         title="Read the numbered letters",
         prompt=(
-            "A strip of letters appears above a row of numbers.\n"
             f"Letters:   {PUZZLE_01_LETTER_STRIP}\n"
             f"Positions: {_format_positions(PUZZLE_01_POSITIONS)}\n"
-            "Use the numbers as direct indexes into the letter strip and enter the decoded phrase."
+            "\nRecover the hidden phrase."
         ),
         expected_answer=PUZZLE_01_FORMATTED_SOLUTION,
         hint="Treat the strip as 1-based indexed: 1=A, 2=R, 3=T, and so on.",
@@ -134,6 +133,7 @@ def build_puzzle_01() -> Puzzle:
             "mechanic": "index-extraction",
             "chapter_puzzle_number": 1,
             "asset_path": "assets/chapters/c001/puzzle-01.png",
+            "web_prompt": "Recover the hidden phrase.",
             "letter_strip": PUZZLE_01_LETTER_STRIP,
             "positions": PUZZLE_01_POSITIONS,
             "raw_solution": PUZZLE_01_RAW_SOLUTION,
@@ -148,19 +148,17 @@ def build_puzzle_02() -> Puzzle:
         id="c001-puzzle-02",
         title="Find the warning in the board",
         prompt=(
-            "A second clue uses a larger board reference.\n"
             f"Board:\n{_format_board_rows(PUZZLE_02_BOARD)}\n"
             f"Source clue: {' '.join(PUZZLE_02_SOURCE_CLUE)}\n"
-            "Use the board to recover the four-letter warning."
+            "\nRecover the hidden warning."
         ),
         expected_answer=PUZZLE_02_SOLUTION,
-        hint=(
-            "Read the board as a grid. The first three letters sit on row 4 and spell T, R, A."
-        ),
+        hint="The two digits identify a position in the board.",
         metadata={
             "mechanic": "grid-extraction",
             "chapter_puzzle_number": 2,
             "asset_path": "assets/chapters/c001/puzzle-02.png",
+            "web_prompt": "Recover the hidden warning.",
             "left_block": PUZZLE_02_LEFT_BLOCK,
             "right_block": PUZZLE_02_RIGHT_BLOCK,
             "source_clue": PUZZLE_02_SOURCE_CLUE,
@@ -196,6 +194,11 @@ def build_puzzle_03() -> Puzzle:
             "mechanic": "hill-cipher-medium",
             "chapter_puzzle_number": 3,
             "asset_path": "assets/chapters/c001/puzzle-03.png",
+            "web_prompt": (
+                "Decode the ciphertext in two-character blocks with the supplied inverse matrix. "
+                "Use A=0 through Z=25 and 1=26 through 5=30, multiplying modulo 31. "
+                "Remove the trailing filler character after decoding."
+            ),
             "alphabet": DEFAULT_HILL_ALPHABET,
             "pad_char": DEFAULT_PAD_CHAR,
             "mode": "medium",

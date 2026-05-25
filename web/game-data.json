@@ -17,13 +17,14 @@
         {
           "id": "c001-puzzle-01",
           "title": "Read the numbered letters",
-          "prompt": "A strip of letters appears above a row of numbers.\nLetters:   ARTOYGDWEASOTUIBOVIAFFQKJI\nPositions: 06 09 03 03 04 08 04 02 24\nUse the numbers as direct indexes into the letter strip and enter the decoded phrase.",
+          "prompt": "Letters:   ARTOYGDWEASOTUIBOVIAFFQKJI\nPositions: 06 09 03 03 04 08 04 02 24\n\nRecover the hidden phrase.",
           "expected_answer": "Get To Work",
           "hint": "Treat the strip as 1-based indexed: 1=A, 2=R, 3=T, and so on.",
           "metadata": {
             "mechanic": "index-extraction",
             "chapter_puzzle_number": 1,
             "asset_path": "assets/chapters/c001/puzzle-01.png",
+            "web_prompt": "Recover the hidden phrase.",
             "letter_strip": "ARTOYGDWEASOTUIBOVIAFFQKJI",
             "positions": [
               6,
@@ -36,19 +37,21 @@
               2,
               24
             ],
-            "raw_solution": "GETTOWORK"
+            "raw_solution": "GETTOWORK",
+            "asset_exists": true
           }
         },
         {
           "id": "c001-puzzle-02",
           "title": "Find the warning in the board",
-          "prompt": "A second clue uses a larger board reference.\nBoard:\n01: VL1NK JOLQ3\n02: QCOSF IA4K1\n03: 1MV1F PEGBZ\n04: TARM2 5YFOX\n05: KQWKX OAPPQ\n06: EU3FL DYZPM\n07: MZXIY OYZEX\n08: XYMHQ OUNGL\n09: I1QOF BNDEH\n10: 443VL UPDME\n11: AWELB 21NB2\n12: EAB2H BUOJ3\nSource clue: 14 34 24 69\nUse the board to recover the four-letter warning.",
+          "prompt": "Board:\n01: VL1NK JOLQ3\n02: QCOSF IA4K1\n03: 1MV1F PEGBZ\n04: TARM2 5YFOX\n05: KQWKX OAPPQ\n06: EU3FL DYZPM\n07: MZXIY OYZEX\n08: XYMHQ OUNGL\n09: I1QOF BNDEH\n10: 443VL UPDME\n11: AWELB 21NB2\n12: EAB2H BUOJ3\nSource clue: 14 34 24 69\n\nRecover the hidden warning.",
           "expected_answer": "TRAP",
-          "hint": "Read the board as a grid. The first three letters sit on row 4 and spell T, R, A.",
+          "hint": "The two digits identify a position in the board.",
           "metadata": {
             "mechanic": "grid-extraction",
             "chapter_puzzle_number": 2,
             "asset_path": "assets/chapters/c001/puzzle-02.png",
+            "web_prompt": "Recover the hidden warning.",
             "left_block": [
               "VL1NK",
               "QCOSF",
@@ -101,7 +104,8 @@
                 6
               ]
             ],
-            "raw_solution": "TRAP"
+            "raw_solution": "TRAP",
+            "asset_exists": true
           }
         },
         {
@@ -114,6 +118,7 @@
             "mechanic": "hill-cipher-medium",
             "chapter_puzzle_number": 3,
             "asset_path": "assets/chapters/c001/puzzle-03.png",
+            "web_prompt": "Decode the ciphertext in two-character blocks with the supplied inverse matrix. Use A=0 through Z=25 and 1=26 through 5=30, multiplying modulo 31. Remove the trailing filler character after decoding.",
             "alphabet": "ABCDEFGHIJKLMNOPQRSTUVWXYZ12345",
             "pad_char": "3",
             "mode": "medium",
@@ -148,7 +153,8 @@
               8
             ],
             "example_decoded_block": "MI",
-            "raw_solution": "MISSION3"
+            "raw_solution": "MISSION3",
+            "asset_exists": false
           }
         }
       ]
@@ -156,33 +162,64 @@
     {
       "code": "c002",
       "title": "Chapter 2: 3 HOURS LEFT TO LIVE",
-      "description": "Chapter 2 introduces a Polybius checkerboard puzzle with row-column decoding.",
+      "description": "Chapter 2 introduces a six-by-six checkerboard and two coordinate-decoding puzzles.",
       "level_id": "level-c002",
       "chapter_note_path": "docs/chapters/c002.md",
       "chapter_note_url": "https://github.com/richardcheam/enigmatica/blob/main/docs/chapters/c002.md",
       "puzzles": [
         {
           "id": "c002-puzzle-01",
-          "title": "Read the Polybius checkerboard",
-          "prompt": "A Polybius checkerboard stores each letter as two digits: row first, then column.\nBoard:\n    1 2 3 4 5\n1:  A B C D E\n2:  F G H I K\n3:  L M N O P\n4:  Q R S T U\n5:  V W X Y Z\nPlayable coordinate clue: 42 11 12 12 24 44\nDecode the coordinate pairs and enter the recovered word.",
+          "title": "Decode the digit string",
+          "prompt": "Reference board:\n    1 2 3 4 5 6\n1:  A B C D E F\n2:  G H I J K L\n3:  M N O P Q R\n4:  S T U V W X\n5:  Y Z 1 2 3 4\n6:  5 6 7 8 9 0\nDigit string: 631121213224\n\nRecover the hidden word.",
           "expected_answer": "RABBIT",
-          "hint": "Start with 42: row 4, column 2 points to R.",
+          "hint": "For this clue, read a pair as column first, then row.",
           "metadata": {
-            "mechanic": "polybius-square",
+            "mechanic": "alphanumeric-checkerboard",
             "chapter_puzzle_number": 1,
             "asset_path": "assets/chapters/c002/puzzle-01.png",
-            "rule_asset_path": "assets/chapters/c002/rule-puzzle-01.png",
+            "rule_asset_path": "assets/chapters/c002/puzzle-01-rule.png",
+            "web_prompt": "Recover the hidden word.",
+            "image_only_clue": true,
             "board_rows": [
-              "ABCDE",
-              "FGHIK",
-              "LMNOP",
-              "QRSTU",
-              "VWXYZ"
+              "ABCDEF",
+              "GHIJKL",
+              "MNOPQR",
+              "STUVWX",
+              "YZ1234",
+              "567890"
             ],
             "source_digits": "631121213224",
-            "playable_coordinates": "42 11 12 12 24 44",
+            "coordinate_order": "column-row",
             "raw_solution": "RABBIT",
-            "source_discrepancy": "The supplied cropped digit clue does not decode to RABBIT using the shown standard checkerboard. The playable clue uses verified coordinates.",
+            "asset_exists": true,
+            "rule_asset_exists": true
+          }
+        },
+        {
+          "id": "c002-puzzle-02",
+          "title": "Decode the written message",
+          "prompt": "Reference board:\n    1 2 3 4 5 6\n1:  A B C D E F\n2:  G H I J K L\n3:  M N O P Q R\n4:  S T U V W X\n5:  Y Z 1 2 3 4\n6:  5 6 7 8 9 0\nDigit string: 31433141122336422214115131115154654222\n\nRecover the hidden message.",
+          "expected_answer": "MUM'S BIRTHDAY MAY 29TH",
+          "hint": "For this clue, read a pair as row first, then column.",
+          "metadata": {
+            "mechanic": "alphanumeric-checkerboard",
+            "chapter_puzzle_number": 2,
+            "asset_path": "assets/chapters/c002/puzzle-02.png",
+            "rule_asset_path": "assets/chapters/c002/puzzle-01-rule.png",
+            "web_prompt": "Recover the hidden message.",
+            "image_only_clue": true,
+            "board_rows": [
+              "ABCDEF",
+              "GHIJKL",
+              "MNOPQR",
+              "STUVWX",
+              "YZ1234",
+              "567890"
+            ],
+            "source_digits": "31433141122336422214115131115154654222",
+            "coordinate_order": "row-column",
+            "raw_solution": "MUMSBIRTHDAYMAY29TH",
+            "asset_exists": true,
             "rule_asset_exists": true
           }
         }

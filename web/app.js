@@ -286,7 +286,7 @@ function renderPuzzle() {
   elements.puzzleEyebrow.textContent = `${copy.play.puzzleFallback} ${index + 1} of ${chapter.puzzles.length}`;
   elements.puzzleTitle.textContent = puzzle.title;
   elements.mechanicChip.textContent = shared.formatMechanicLabel(puzzle.metadata.mechanic);
-  elements.puzzlePrompt.textContent = puzzle.prompt;
+  elements.puzzlePrompt.textContent = puzzle.metadata.web_prompt || puzzle.prompt;
   elements.answerInput.value = "";
   elements.answerInput.placeholder = solved
     ? copy.play.answerPlaceholderSolved
@@ -296,7 +296,11 @@ function renderPuzzle() {
   renderPuzzleImages(puzzle).forEach((imageFrame) => elements.puzzleMedia.append(imageFrame));
 
   elements.puzzleClue.innerHTML = "";
-  elements.puzzleClue.append(renderMechanicClue(puzzle));
+  const mechanicClue = renderMechanicClue(puzzle);
+  elements.puzzleClue.hidden = mechanicClue === null;
+  if (mechanicClue) {
+    elements.puzzleClue.append(mechanicClue);
+  }
 
   if (solved) {
     showStatus(copy.interface.solvedReplay, "success");
@@ -335,6 +339,10 @@ function renderPuzzleImage(assetPath, altText, label) {
 }
 
 function renderMechanicClue(puzzle) {
+  if (puzzle.metadata.image_only_clue) {
+    return null;
+  }
+
   const mechanic = puzzle.metadata.mechanic;
   const panel = document.createElement("div");
   panel.className = "clue-panel";
@@ -416,7 +424,7 @@ ${puzzle.metadata.board_rows
     return panel;
   }
 
-  panel.innerHTML = `<div class="prompt-block"><p>${puzzle.prompt}</p></div>`;
+  panel.innerHTML = `<div class="prompt-block"><p>${puzzle.metadata.web_prompt || puzzle.prompt}</p></div>`;
   return panel;
 }
 
