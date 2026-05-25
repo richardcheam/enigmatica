@@ -13,7 +13,7 @@ from src.game.levels import Level
 from src.game.puzzle import Puzzle
 
 CHAPTER_CODE = "c002"
-CHAPTER_TITLE = "Chapter 2"
+CHAPTER_TITLE = "Chapter 2: 3 HOURS LEFT TO LIVE"
 PUZZLE_01_SOURCE_DIGITS = "631121213224"
 PUZZLE_01_ANSWER = "RABBIT"
 PUZZLE_01_PLAYABLE_COORDINATES = encode_polybius(PUZZLE_01_ANSWER)
@@ -74,7 +74,7 @@ def build_level() -> Level:
     return Level(
         id="level-c002",
         title=CHAPTER_TITLE,
-        description="Chapter 2 introduces Polybius checkerboard coordinate decoding.",
+        description="Chapter 2: 3 HOURS LEFT TO LIVE introduces Polybius checkerboard coordinate decoding.",
         puzzles=build_puzzles(),
         chapter_code=CHAPTER_CODE,
     )
