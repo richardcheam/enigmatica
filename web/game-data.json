@@ -44,7 +44,7 @@
         {
           "id": "c001-puzzle-02",
           "title": "Find the warning in the board",
-          "prompt": "Board:\n01: VL1NK JOLQ3\n02: QCOSF IA4K1\n03: 1MV1F PEGBZ\n04: TARM2 5YFOX\n05: KQWKX OAPPQ\n06: EU3FL DYZPM\n07: MZXIY OYZEX\n08: XYMHQ OUNGL\n09: I1QOF BNDEH\n10: 443VL UPDME\n11: AWELB 21NB2\n12: EAB2H BUOJ3\nSource clue: 14 34 24 69\n\nRecover the hidden warning.",
+          "prompt": "Board:\n01: VL1NK JOLQ3\n02: QCOSF IA4K1\n03: 1MV1F PEGBZ\n04: TARM2 5YFOX\n05: KQWKX OAPPQ\n06: EU3FL DYZPM\n07: MZXIY OYZEX\n08: XYMHQ OUNGL\n09: I1QOF BNDEH\n10: 443VL UPDME\n11: AWELB 21NB2\n12: EAB2H BUOJ3\nSource clue: 14 34 24 96\n\nRecover the hidden warning.",
           "expected_answer": "TRAP",
           "hint": "The two digits identify a position in the board.",
           "metadata": {
@@ -84,7 +84,7 @@
               "14",
               "34",
               "24",
-              "69"
+              "96"
             ],
             "board_coordinates": [
               [
