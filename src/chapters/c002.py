@@ -63,6 +63,7 @@ def build_puzzle_01() -> Puzzle:
         metadata={
             "mechanic": "alphanumeric-checkerboard",
             "chapter_puzzle_number": 1,
+            "mechanic_asset_path": "assets/chapters/c002/polybius-checkerboard.png",
             "asset_path": "assets/chapters/c002/puzzle-01.png",
             "rule_asset_path": "assets/chapters/c002/puzzle-01-rule.png",
             "web_prompt": "Recover the hidden word.",

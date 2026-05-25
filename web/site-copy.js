@@ -47,6 +47,7 @@
       chaptersEyebrow: "Chapters",
       openChapter: "Open interactive chapter",
       continueChapterCard: "Continue chapter",
+      lockedChapter: "Complete previous chapter to unlock",
     },
     play: {
       modeEyebrow: "Interactive Mode",
@@ -76,6 +77,7 @@
       cluePolybiusBoard: "Polybius Board",
       cluePlayableCoordinates: "Playable Coordinates",
       sourceSnapshot: "Source Snapshot",
+      mechanicSnapshot: "Mechanic Reference",
       ruleSnapshot: "Rule Reference",
     },
     interface: {

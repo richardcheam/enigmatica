@@ -57,9 +57,13 @@ async function boot() {
 function hydrateDefaults() {
   const chapters = state.data.chapters;
   const requestedChapterCode = params.get("chapter");
-  const requestedChapter = shared.getChapterByCode(state.data, requestedChapterCode);
-  const fallbackChapter =
-    shared.getChapterByCode(state.data, state.progress.activeChapterCode) || chapters[0] || null;
+  const requestedChapterCandidate = shared.getChapterByCode(state.data, requestedChapterCode);
+  const requestedChapter =
+    requestedChapterCandidate &&
+    shared.isChapterUnlocked(state.data, requestedChapterCandidate.code, state.progress)
+      ? requestedChapterCandidate
+      : null;
+  const fallbackChapter = shared.getResumeChapter(state.data, state.progress) || chapters[0] || null;
   const activeChapter = requestedChapter || fallbackChapter;
 
   state.activeChapterCode = activeChapter?.code ?? null;
@@ -170,10 +174,14 @@ function resetProgress() {
 
   state.progress = {
     solvedPuzzleIds: [],
-    activeChapterCode: state.activeChapterCode,
+    activeChapterCode: null,
     activePuzzleId: null,
   };
-  state.activePuzzleId = shared.getFirstAvailablePuzzleId(getActiveChapter(), state.progress);
+  const chapter = shared.getResumeChapter(state.data, state.progress);
+  state.activeChapterCode = chapter?.code ?? null;
+  state.activePuzzleId = chapter
+    ? shared.getFirstAvailablePuzzleId(chapter, state.progress)
+    : null;
   saveProgress();
   syncUrl();
   resetPuzzlePanels();
@@ -313,6 +321,16 @@ function renderPuzzle() {
 
 function renderPuzzleImages(puzzle) {
   const images = [];
+  if (puzzle.metadata.mechanic_asset_path && puzzle.metadata.mechanic_asset_exists) {
+    images.push(
+      renderPuzzleImage(
+        puzzle.metadata.mechanic_asset_path,
+        `${puzzle.title} mechanic reference`,
+        copy.play.mechanicSnapshot || "Mechanic Reference",
+      ),
+    );
+  }
+
   if (puzzle.metadata.rule_asset_path && puzzle.metadata.rule_asset_exists) {
     images.push(
       renderPuzzleImage(puzzle.metadata.rule_asset_path, `${puzzle.title} rule reference`, copy.play.ruleSnapshot),

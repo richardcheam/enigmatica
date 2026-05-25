@@ -418,6 +418,18 @@ a {
   transform: translateY(-2px);
 }
 
+.chapter-item.is-locked {
+  opacity: 0.45;
+}
+
+.chapter-item.is-locked:hover {
+  transform: none;
+}
+
+.chapter-item.is-locked .chapter-button {
+  cursor: not-allowed;
+}
+
 .chapter-button strong {
   display: block;
   margin-bottom: 0.25rem;

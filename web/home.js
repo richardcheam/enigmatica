@@ -125,13 +125,21 @@ function renderChapterList() {
     const solvedCount = chapter.puzzles.filter((puzzle) =>
       state.progress.solvedPuzzleIds.includes(puzzle.id),
     ).length;
+    const unlocked = shared.isChapterUnlocked(state.data, chapter.code, state.progress);
 
     const item = document.createElement("div");
-    item.className = `chapter-item${chapter.code === state.progress.activeChapterCode ? " is-active" : ""}`;
+    item.className = [
+      "chapter-item",
+      chapter.code === state.progress.activeChapterCode ? "is-active" : "",
+      !unlocked ? "is-locked" : "",
+    ]
+      .filter(Boolean)
+      .join(" ");
 
     const button = document.createElement("button");
     button.type = "button";
     button.className = "chapter-button";
+    button.disabled = !unlocked;
     button.innerHTML = `
       <strong>${chapter.code.toUpperCase()} · ${chapter.title}</strong>
       <span>${chapter.description}</span>
@@ -139,10 +147,14 @@ function renderChapterList() {
         <span class="chapter-pill">${solvedCount} / ${chapter.puzzles.length} ${copy.common.solved}</span>
         <span class="subtle-label">${chapter.puzzles.length} ${copy.common.puzzles}</span>
       </div>
-      <span class="chapter-cta">${solvedCount > 0 ? copy.home.continueChapterCard : copy.home.openChapter}</span>
+      <span class="chapter-cta">${!unlocked ? copy.home.lockedChapter : solvedCount > 0 ? copy.home.continueChapterCard : copy.home.openChapter}</span>
     `;
 
     button.addEventListener("click", () => {
+      if (!unlocked) {
+        return;
+      }
+
       window.location.href = shared.buildPlayUrl(chapter.code);
     });
 
@@ -152,10 +164,8 @@ function renderChapterList() {
 }
 
 function getPrimaryPlayUrl() {
-  const requestedChapterCode =
-    state.progress.activeChapterCode || state.data.chapters[0]?.code || null;
-
-  return shared.buildPlayUrl(requestedChapterCode);
+  const chapter = shared.getResumeChapter(state.data, state.progress);
+  return shared.buildPlayUrl(chapter?.code ?? null);
 }
 
 function resetProgress() {

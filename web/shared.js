@@ -65,6 +65,50 @@
     return data.chapters.find((chapter) => chapter.code === chapterCode) ?? null;
   }
 
+  function isChapterComplete(chapter, progress) {
+    return (
+      chapter.puzzles.length > 0 &&
+      chapter.puzzles.every((puzzle) => progress.solvedPuzzleIds.includes(puzzle.id))
+    );
+  }
+
+  function isChapterUnlocked(data, chapterCode, progress) {
+    const chapterIndex = data.chapters.findIndex((chapter) => chapter.code === chapterCode);
+    if (chapterIndex < 0) {
+      return false;
+    }
+
+    return data.chapters
+      .slice(0, chapterIndex)
+      .every((chapter) => isChapterComplete(chapter, progress));
+  }
+
+  function getResumeChapter(data, progress) {
+    const activeChapter = getChapterByCode(data, progress.activeChapterCode);
+    if (
+      activeChapter &&
+      isChapterUnlocked(data, activeChapter.code, progress) &&
+      !isChapterComplete(activeChapter, progress)
+    ) {
+      return activeChapter;
+    }
+
+    const nextChapter = data.chapters.find(
+      (chapter) =>
+        isChapterUnlocked(data, chapter.code, progress) &&
+        !isChapterComplete(chapter, progress),
+    );
+    if (nextChapter) {
+      return nextChapter;
+    }
+
+    return (
+      [...data.chapters]
+        .reverse()
+        .find((chapter) => isChapterUnlocked(data, chapter.code, progress)) ?? null
+    );
+  }
+
   function getContiguousSolvedCount(chapter, progress) {
     let count = 0;
     for (const puzzle of chapter.puzzles) {
@@ -118,6 +162,9 @@
     combineGridBlocks,
     formatMatrix,
     getChapterByCode,
+    isChapterComplete,
+    isChapterUnlocked,
+    getResumeChapter,
     getContiguousSolvedCount,
     getFirstAvailablePuzzleId,
     getProgressSummary,
