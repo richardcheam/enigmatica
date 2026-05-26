@@ -38,6 +38,12 @@ const elements = {
   hintBox: document.querySelector("#hintBox"),
   statusBox: document.querySelector("#statusBox"),
   resetProgressButton: document.querySelector("#resetProgressButton"),
+  completionModal: document.querySelector("#completionModal"),
+  completionModalEyebrow: document.querySelector("#completionModalEyebrow"),
+  completionModalTitle: document.querySelector("#completionModalTitle"),
+  completionModalBody: document.querySelector("#completionModalBody"),
+  completionModalPrimaryButton: document.querySelector("#completionModalPrimaryButton"),
+  completionModalCloseButton: document.querySelector("#completionModalCloseButton"),
 };
 
 boot();
@@ -78,15 +84,17 @@ function hydrateDefaults() {
   const requestedPuzzleIndex = activeChapter.puzzles.findIndex(
     (puzzle) => puzzle.id === requestedPuzzleId,
   );
+  const progressPuzzleIndex = activeChapter.puzzles.findIndex(
+    (puzzle) => puzzle.id === state.progress.activePuzzleId,
+  );
   const requestedPuzzleUnlocked =
     requestedPuzzleIndex >= 0 && requestedPuzzleIndex <= contiguousSolved;
+  const progressPuzzleUnlocked =
+    progressPuzzleIndex >= 0 && progressPuzzleIndex <= contiguousSolved;
 
   if (requestedPuzzleUnlocked) {
     state.activePuzzleId = requestedPuzzleId;
-  } else if (
-    state.progress.activePuzzleId &&
-    activeChapter.puzzles.some((puzzle) => puzzle.id === state.progress.activePuzzleId)
-  ) {
+  } else if (progressPuzzleUnlocked) {
     state.activePuzzleId = state.progress.activePuzzleId;
   } else {
     state.activePuzzleId = firstAvailablePuzzleId;
@@ -101,6 +109,18 @@ function bindEvents() {
   elements.hintButton.addEventListener("click", toggleHint);
   elements.continueButton.addEventListener("click", advanceToNextPuzzle);
   elements.resetProgressButton.addEventListener("click", resetProgress);
+  elements.completionModalPrimaryButton.addEventListener("click", handleCompletionModalPrimary);
+  elements.completionModalCloseButton.addEventListener("click", closeCompletionModal);
+  elements.completionModal.addEventListener("click", (event) => {
+    if (event.target === elements.completionModal) {
+      closeCompletionModal();
+    }
+  });
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape" && !elements.completionModal.hidden) {
+      closeCompletionModal();
+    }
+  });
 }
 
 function handleAnswerSubmit(event) {
@@ -122,10 +142,11 @@ function handleAnswerSubmit(event) {
 
     if (hasNextPuzzle()) {
       showStatus(copy.interface.correctUnlock, "success");
-      elements.continueButton.hidden = false;
+      setContinueAvailability(true);
     } else {
       showStatus(copy.interface.chapterClearReplay, "success");
-      elements.continueButton.hidden = true;
+      setContinueAvailability(false);
+      showChapterCompletionModal();
     }
     return;
   }
@@ -148,12 +169,18 @@ function toggleHint() {
 
 function advanceToNextPuzzle() {
   const chapter = getActiveChapter();
+  if (!state.progress.solvedPuzzleIds.includes(state.activePuzzleId)) {
+    showStatus(copy.interface.solveBeforeContinue, "error");
+    setContinueAvailability(false);
+    return;
+  }
+
   const currentIndex = chapter.puzzles.findIndex((puzzle) => puzzle.id === state.activePuzzleId);
   const nextPuzzle = chapter.puzzles[currentIndex + 1];
 
   if (!nextPuzzle) {
     showStatus(copy.interface.chapterClearSoon, "success");
-    elements.continueButton.hidden = true;
+    setContinueAvailability(false);
     return;
   }
 
@@ -210,6 +237,8 @@ function renderStaticCopy() {
   elements.submitButton.textContent = copy.play.submit;
   elements.hintButton.textContent = copy.play.showHint;
   elements.continueButton.textContent = copy.play.continue;
+  elements.completionModalEyebrow.textContent = copy.modal.eyebrow;
+  elements.completionModalCloseButton.textContent = copy.modal.stayHere;
 }
 
 function renderProgress() {
@@ -312,10 +341,10 @@ function renderPuzzle() {
 
   if (solved) {
     showStatus(copy.interface.solvedReplay, "success");
-    elements.continueButton.hidden = !hasNextPuzzle();
+    setContinueAvailability(hasNextPuzzle());
   } else {
     showStatus(copy.interface.ready, "neutral");
-    elements.continueButton.hidden = true;
+    setContinueAvailability(false);
   }
 }
 
@@ -455,7 +484,48 @@ function resetPuzzlePanels() {
   elements.hintBox.hidden = true;
   elements.hintBox.textContent = "";
   elements.hintButton.textContent = copy.play.showHint;
-  elements.continueButton.hidden = true;
+  setContinueAvailability(false);
+  closeCompletionModal();
+}
+
+function setContinueAvailability(available) {
+  elements.continueButton.hidden = !available;
+  elements.continueButton.disabled = !available;
+}
+
+function showChapterCompletionModal() {
+  const chapter = getActiveChapter();
+  const chapterIndex = state.data.chapters.findIndex((item) => item.code === chapter.code);
+  const nextChapter = state.data.chapters[chapterIndex + 1] ?? null;
+  const canAdvance =
+    nextChapter && shared.isChapterUnlocked(state.data, nextChapter.code, state.progress);
+
+  elements.completionModalTitle.textContent = `${chapter.title} Complete`;
+  elements.completionModalBody.textContent = canAdvance
+    ? copy.modal.nextUnlocked
+    : copy.modal.allComplete;
+  elements.completionModalPrimaryButton.textContent = canAdvance
+    ? copy.modal.advance
+    : copy.modal.returnHome;
+  elements.completionModalPrimaryButton.dataset.chapterCode = canAdvance ? nextChapter.code : "";
+  elements.completionModal.hidden = false;
+  document.body.classList.add("has-modal");
+  elements.completionModalPrimaryButton.focus();
+}
+
+function closeCompletionModal() {
+  elements.completionModal.hidden = true;
+  document.body.classList.remove("has-modal");
+}
+
+function handleCompletionModalPrimary() {
+  const nextChapterCode = elements.completionModalPrimaryButton.dataset.chapterCode;
+  if (nextChapterCode) {
+    window.location.href = shared.buildPlayUrl(nextChapterCode);
+    return;
+  }
+
+  window.location.href = "./index.html";
 }
 
 function hasNextPuzzle() {

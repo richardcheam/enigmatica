@@ -53,6 +53,10 @@ input {
   font: inherit;
 }
 
+[hidden] {
+  display: none !important;
+}
+
 a {
   color: inherit;
 }
@@ -691,6 +695,11 @@ a {
   padding: 0.95rem 1rem;
 }
 
+.hint-box {
+  white-space: pre-line;
+  line-height: 1.65;
+}
+
 .status-box.is-success {
   border-color: rgba(31, 106, 79, 0.2);
   color: var(--success);
@@ -703,6 +712,48 @@ a {
 
 .status-box.is-neutral {
   color: var(--ink-soft);
+}
+
+body.has-modal {
+  overflow: hidden;
+}
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 10;
+  display: grid;
+  place-items: center;
+  padding: 1rem;
+  background: rgba(7, 4, 16, 0.7);
+  backdrop-filter: blur(10px);
+}
+
+.completion-modal {
+  width: min(520px, 100%);
+  border: 1px solid rgba(185, 145, 255, 0.3);
+  border-radius: var(--radius-xl);
+  background:
+    radial-gradient(circle at top right, rgba(143, 98, 255, 0.22), transparent 17rem),
+    linear-gradient(180deg, #27163c, #130b21);
+  box-shadow: var(--surface-shadow);
+  padding: clamp(1.35rem, 4vw, 2rem);
+}
+
+.completion-modal h2 {
+  margin: 0.55rem 0 0.75rem;
+}
+
+.completion-modal p {
+  margin: 0 0 1.4rem;
+  color: var(--ink-soft);
+  line-height: 1.6;
+}
+
+.modal-actions {
+  display: flex;
+  gap: 0.65rem;
+  flex-wrap: wrap;
 }
 
 @media (max-width: 1100px) {

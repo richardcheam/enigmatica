@@ -106,6 +106,29 @@
       </main>
     </div>
 
+    <div
+      class="modal-overlay"
+      id="completionModal"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="completionModalTitle"
+      hidden
+    >
+      <section class="completion-modal">
+        <div class="eyebrow" id="completionModalEyebrow">Chapter Complete</div>
+        <h2 id="completionModalTitle">Chapter complete</h2>
+        <p id="completionModalBody"></p>
+        <div class="modal-actions">
+          <button class="primary-button" id="completionModalPrimaryButton" type="button">
+            Continue
+          </button>
+          <button class="ghost-button" id="completionModalCloseButton" type="button">
+            Stay Here
+          </button>
+        </div>
+      </section>
+    </div>
+
     <script src="./web/site-copy.js"></script>
     <script src="./web/shared.js"></script>
     <script src="./web/app.js"></script>

@@ -71,7 +71,13 @@ PUZZLE_03_RAW_SOLUTION = decode_hill(
     pad_char=DEFAULT_PAD_CHAR,
 )
 PUZZLE_03_SOLUTION = PUZZLE_03_RAW_SOLUTION.removesuffix(DEFAULT_PAD_CHAR)
-PUZZLE_03_EXAMPLE_BLOCK = "QB"
+PUZZLE_03_EXAMPLE_PLAINTEXT = "OK"
+PUZZLE_03_EXAMPLE_BLOCK = encode_hill(
+    PUZZLE_03_EXAMPLE_PLAINTEXT,
+    PUZZLE_03_HILL_KEY,
+    alphabet=DEFAULT_HILL_ALPHABET,
+    pad_char=DEFAULT_PAD_CHAR,
+)
 PUZZLE_03_EXAMPLE_VECTOR = (
     DEFAULT_HILL_ALPHABET.index(PUZZLE_03_EXAMPLE_BLOCK[0]),
     DEFAULT_HILL_ALPHABET.index(PUZZLE_03_EXAMPLE_BLOCK[1]),
@@ -175,30 +181,31 @@ def build_puzzle_03() -> Puzzle:
         id="c001-puzzle-03",
         title="Use the Hill-cipher inverse matrix",
         prompt=(
-            "This chapter step uses a two-character Hill cipher over the alphabet "
-            f"{DEFAULT_HILL_ALPHABET}.\n"
-            "Medium mode gives you the inverse matrix, so you do not need to derive it yourself.\n"
-            "Character values: A=0, B=1, ..., Z=25, 1=26, 2=27, 3=28, 4=29, 5=30\n"
-            "Use this inverse matrix:\n"
+            f"Alphabet: {DEFAULT_HILL_ALPHABET}\n"
+            "Supplied inverse matrix:\n"
             f"{_format_matrix(PUZZLE_03_INVERSE_KEY)}\n"
-            "Treat each block XY as the column vector [x, y]^T, multiply modulo 31, then convert "
-            "the result back into characters.\n"
             f"Ciphertext blocks: {_format_blocks(PUZZLE_03_CIPHERTEXT)}\n"
-            "Decode all four blocks, join the plaintext, then remove the trailing filler character '3'."
+            "\nRecover the hidden message."
         ),
         expected_answer=PUZZLE_03_SOLUTION,
         hint=(
-            "Worked example: QB -> [16,1]. Applying the inverse matrix gives [12,8], which maps to MI."
+            "How to use the inverse matrix:\n"
+            "1. Number the alphabet from 0 to 30: A=0, ..., Z=25, 1=26, ..., 5=30.\n"
+            "2. Read the ciphertext two characters at a time. For each pair, use its two "
+            "numbers as a column vector.\n"
+            "3. Multiply that vector by the supplied inverse matrix. `mod 31` means keep the "
+            "remainder after division by 31, so every result returns to the alphabet range.\n"
+            "\nUnrelated example using the same matrix: LB -> OK.\n"
+            "L=11 and B=1, so the vector is [11, 1].\n"
+            "First letter: (12 x 11 + 6 x 1) = 138; 138 mod 31 = 14; 14 -> O.\n"
+            "Second letter: (12 x 11 + 2 x 1) = 134; 134 mod 31 = 10; 10 -> K.\n"
+            "Repeat that process for each ciphertext block, then remove a final filler `3`."
         ),
         metadata={
             "mechanic": "hill-cipher-medium",
             "chapter_puzzle_number": 3,
             "asset_path": "assets/chapters/c001/puzzle-03.png",
-            "web_prompt": (
-                "Decode the ciphertext in two-character blocks with the supplied inverse matrix. "
-                "Use A=0 through Z=25 and 1=26 through 5=30, multiplying modulo 31. "
-                "Remove the trailing filler character after decoding."
-            ),
+            "web_prompt": "Use the supplied materials to recover the hidden message.",
             "alphabet": DEFAULT_HILL_ALPHABET,
             "pad_char": DEFAULT_PAD_CHAR,
             "mode": "medium",

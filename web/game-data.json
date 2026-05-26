@@ -111,14 +111,14 @@
         {
           "id": "c001-puzzle-03",
           "title": "Use the Hill-cipher inverse matrix",
-          "prompt": "This chapter step uses a two-character Hill cipher over the alphabet ABCDEFGHIJKLMNOPQRSTUVWXYZ12345.\nMedium mode gives you the inverse matrix, so you do not need to derive it yourself.\nCharacter values: A=0, B=1, ..., Z=25, 1=26, 2=27, 3=28, 4=29, 5=30\nUse this inverse matrix:\n  [12  6]\n  [12  2]\nTreat each block XY as the column vector [x, y]^T, multiply modulo 31, then convert the result back into characters.\nCiphertext blocks: QB RA EO ME\nDecode all four blocks, join the plaintext, then remove the trailing filler character '3'.",
+          "prompt": "Alphabet: ABCDEFGHIJKLMNOPQRSTUVWXYZ12345\nSupplied inverse matrix:\n  [12  6]\n  [12  2]\nCiphertext blocks: QB RA EO ME\n\nRecover the hidden message.",
           "expected_answer": "MISSION",
-          "hint": "Worked example: QB -> [16,1]. Applying the inverse matrix gives [12,8], which maps to MI.",
+          "hint": "How to use the inverse matrix:\n1. Number the alphabet from 0 to 30: A=0, ..., Z=25, 1=26, ..., 5=30.\n2. Read the ciphertext two characters at a time. For each pair, use its two numbers as a column vector.\n3. Multiply that vector by the supplied inverse matrix. `mod 31` means keep the remainder after division by 31, so every result returns to the alphabet range.\n\nUnrelated example using the same matrix: LB -> OK.\nL=11 and B=1, so the vector is [11, 1].\nFirst letter: (12 x 11 + 6 x 1) = 138; 138 mod 31 = 14; 14 -> O.\nSecond letter: (12 x 11 + 2 x 1) = 134; 134 mod 31 = 10; 10 -> K.\nRepeat that process for each ciphertext block, then remove a final filler `3`.",
           "metadata": {
             "mechanic": "hill-cipher-medium",
             "chapter_puzzle_number": 3,
             "asset_path": "assets/chapters/c001/puzzle-03.png",
-            "web_prompt": "Decode the ciphertext in two-character blocks with the supplied inverse matrix. Use A=0 through Z=25 and 1=26 through 5=30, multiplying modulo 31. Remove the trailing filler character after decoding.",
+            "web_prompt": "Use the supplied materials to recover the hidden message.",
             "alphabet": "ABCDEFGHIJKLMNOPQRSTUVWXYZ12345",
             "pad_char": "3",
             "mode": "medium",
@@ -143,16 +143,16 @@
                 2
               ]
             ],
-            "example_block": "QB",
+            "example_block": "LB",
             "example_vector": [
-              16,
+              11,
               1
             ],
             "example_decoded_vector": [
-              12,
-              8
+              14,
+              10
             ],
-            "example_decoded_block": "MI",
+            "example_decoded_block": "OK",
             "raw_solution": "MISSION3",
             "asset_exists": false
           }

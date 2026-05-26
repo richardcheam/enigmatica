@@ -88,11 +88,20 @@
       noHint: "No hint is available for this puzzle yet.",
       correctUnlock: "Correct. The next puzzle is unlocked.",
       incorrect: "Not quite yet. Try again or reveal the hint.",
+      solveBeforeContinue: "Solve this puzzle before moving to the next one.",
       chapterClearReplay: "Chapter clear. Return home or replay any puzzle here.",
       chapterClearSoon: "Chapter clear. More chapters soon.",
       progressReset: "Progress reset.",
       solvedReplay: "Solved. You can move on or replay it here.",
       ready: "Ready when you are.",
+    },
+    modal: {
+      eyebrow: "Chapter Complete",
+      advance: "Advance to Next Chapter",
+      returnHome: "Return Home",
+      stayHere: "Stay Here",
+      nextUnlocked: "The next chapter is now unlocked. Continue when you are ready.",
+      allComplete: "You have completed every available chapter.",
     },
   };
 })(window);
