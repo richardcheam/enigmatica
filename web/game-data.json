@@ -52,6 +52,8 @@
             "chapter_puzzle_number": 2,
             "asset_path": "assets/chapters/c001/puzzle-02.png",
             "web_prompt": "Recover the hidden warning.",
+            "image_only_clue": true,
+            "hint_clue": "grid-extraction",
             "left_block": [
               "VL1NK",
               "QCOSF",
@@ -170,16 +172,17 @@
         {
           "id": "c002-puzzle-01",
           "title": "Decode the digit string",
-          "prompt": "Reference board:\n    1 2 3 4 5 6\n1:  A B C D E F\n2:  G H I J K L\n3:  M N O P Q R\n4:  S T U V W X\n5:  Y Z 1 2 3 4\n6:  5 6 7 8 9 0\nDigit string: 631121213224\n\nRecover the hidden word.",
+          "prompt": "Digit string: 631121213224\n\nRecover the hidden word.",
           "expected_answer": "RABBIT",
-          "hint": "For this clue, read a pair as column first, then row.",
+          "hint": "Use this reference board:\n    1 2 3 4 5 6\n1:  A B C D E F\n2:  G H I J K L\n3:  M N O P Q R\n4:  S T U V W X\n5:  Y Z 1 2 3 4\n6:  5 6 7 8 9 0\nread a pair as column first, then row.",
           "metadata": {
             "mechanic": "alphanumeric-checkerboard",
             "chapter_puzzle_number": 1,
-            "mechanic_asset_path": "assets/chapters/c002/polybius-checkerboard.png",
             "asset_path": "assets/chapters/c002/puzzle-01.png",
-            "rule_asset_path": "assets/chapters/c002/puzzle-01-rule.png",
+            "hint_mechanic_asset_path": "assets/chapters/c002/polybius-checkerboard.png",
+            "hint_rule_asset_path": "assets/chapters/c002/puzzle-01-rule.png",
             "web_prompt": "Recover the hidden word.",
+            "web_hint": "Use the revealed board. For this clue, read each pair as column first, then row.",
             "image_only_clue": true,
             "board_rows": [
               "ABCDEF",
@@ -192,23 +195,24 @@
             "source_digits": "631121213224",
             "coordinate_order": "column-row",
             "raw_solution": "RABBIT",
-            "mechanic_asset_exists": true,
             "asset_exists": true,
-            "rule_asset_exists": true
+            "hint_mechanic_asset_exists": true,
+            "hint_rule_asset_exists": true
           }
         },
         {
           "id": "c002-puzzle-02",
           "title": "Decode the written message",
-          "prompt": "Reference board:\n    1 2 3 4 5 6\n1:  A B C D E F\n2:  G H I J K L\n3:  M N O P Q R\n4:  S T U V W X\n5:  Y Z 1 2 3 4\n6:  5 6 7 8 9 0\nDigit string: 31433141122336422214115131115154654222\n\nRecover the hidden message.",
+          "prompt": "Digit string: 31433141122336422214115131115154654222\n\nRecover the hidden message.",
           "expected_answer": "MUM'S BIRTHDAY MAY 29TH",
-          "hint": "For this clue, read a pair as row first, then column.",
+          "hint": "Use this reference board:\n    1 2 3 4 5 6\n1:  A B C D E F\n2:  G H I J K L\n3:  M N O P Q R\n4:  S T U V W X\n5:  Y Z 1 2 3 4\n6:  5 6 7 8 9 0\nread a pair as row first, then column.",
           "metadata": {
             "mechanic": "alphanumeric-checkerboard",
             "chapter_puzzle_number": 2,
             "asset_path": "assets/chapters/c002/puzzle-02.png",
-            "rule_asset_path": "assets/chapters/c002/puzzle-01-rule.png",
+            "hint_rule_asset_path": "assets/chapters/c002/puzzle-01-rule.png",
             "web_prompt": "Recover the hidden message.",
+            "web_hint": "Use the revealed board. For this clue, read each pair as row first, then column.",
             "image_only_clue": true,
             "board_rows": [
               "ABCDEF",
@@ -222,7 +226,126 @@
             "coordinate_order": "row-column",
             "raw_solution": "MUMSBIRTHDAYMAY29TH",
             "asset_exists": true,
-            "rule_asset_exists": true
+            "hint_rule_asset_exists": true
+          }
+        }
+      ]
+    },
+    {
+      "code": "c003",
+      "title": "Chapter 3: 5 MINUTES LEFT TO LIVE",
+      "description": "Chapter 3 inspires an original Morse-code signal and a guided frequency-analysis investigation.",
+      "level_id": "level-c003",
+      "chapter_note_path": "docs/chapters/c003.md",
+      "chapter_note_url": "https://github.com/richardcheam/enigmatica/blob/main/docs/chapters/c003.md",
+      "puzzles": [
+        {
+          "id": "c003-puzzle-01",
+          "title": "Read the urgent signal",
+          "prompt": "Morse transmission:\n.... ..- .-. .-. -.--\n\nDecode the single word.",
+          "expected_answer": "HURRY",
+          "hint": "Use the Morse-code reference below. Decode each space-separated character.",
+          "metadata": {
+            "mechanic": "morse-code",
+            "chapter_puzzle_number": 1,
+            "hint_mechanic_asset_path": "assets/chapters/c003/morse-code.png",
+            "web_prompt": "Decode the transmitted word.",
+            "encoded_message": ".... ..- .-. .-. -.--",
+            "raw_solution": "HURRY",
+            "game_original": true,
+            "hint_mechanic_asset_exists": true
+          }
+        },
+        {
+          "id": "c003-puzzle-02",
+          "title": "Find the dominant symbol",
+          "prompt": "Encrypted message:\nWKH VDPH OHWWHU DSSHDUV RIWHQ LQ HQJOLVK. WKH PHVVDJH RSHQV ZKHQ BRX WHVW FRPPRQ ZRUGV. UHSRUW FRGH: HDVW JDWH.\n\nEnter the ciphertext letter that appears most frequently.",
+          "expected_answer": "H",
+          "hint": "Ranked letter counts:\n  H: 17 (19.10%)\n  W: 10 (11.24%)\n  V:  9 (10.11%)\n  R:  8 ( 8.99%)\n  D:  6 ( 6.74%)\n  Q:  6 ( 6.74%)\n  U:  5 ( 5.62%)\n  K:  4 ( 4.49%)\n  P:  4 ( 4.49%)\n  S:  4 ( 4.49%)\n\nThe tallest bar identifies the repeated ciphertext symbol. Frequency provides evidence, not a guaranteed plaintext substitution.",
+          "metadata": {
+            "mechanic": "frequency-analysis",
+            "chapter_puzzle_number": 2,
+            "web_prompt": "Which ciphertext letter appears most often?",
+            "web_hint": "Use the letter-frequency chart below. The tallest bar identifies the most repeated ciphertext symbol; it is evidence, not a guaranteed substitution.",
+            "ciphertext": "WKH VDPH OHWWHU DSSHDUV RIWHQ LQ HQJOLVK. WKH PHVVDJH RSHQV ZKHQ BRX WHVW FRPPRQ ZRUGV. UHSRUW FRGH: HDVW JDWH.",
+            "frequency_profile": [
+              {
+                "symbol": "H",
+                "count": 17,
+                "percentage": 19.1
+              },
+              {
+                "symbol": "W",
+                "count": 10,
+                "percentage": 11.24
+              },
+              {
+                "symbol": "V",
+                "count": 9,
+                "percentage": 10.11
+              },
+              {
+                "symbol": "R",
+                "count": 8,
+                "percentage": 8.99
+              },
+              {
+                "symbol": "D",
+                "count": 6,
+                "percentage": 6.74
+              },
+              {
+                "symbol": "Q",
+                "count": 6,
+                "percentage": 6.74
+              },
+              {
+                "symbol": "U",
+                "count": 5,
+                "percentage": 5.62
+              },
+              {
+                "symbol": "K",
+                "count": 4,
+                "percentage": 4.49
+              },
+              {
+                "symbol": "P",
+                "count": 4,
+                "percentage": 4.49
+              },
+              {
+                "symbol": "S",
+                "count": 4,
+                "percentage": 4.49
+              }
+            ],
+            "hint_clue": "frequency-profile",
+            "raw_solution": "H",
+            "game_original": true
+          }
+        },
+        {
+          "id": "c003-puzzle-03",
+          "title": "Recover the report code",
+          "prompt": "Encrypted message:\nWKH VDPH OHWWHU DSSHDUV RIWHQ LQ HQJOLVK. WKH PHVVDJH RSHQV ZKHQ BRX WHVW FRPPRQ ZRUGV. UHSRUW FRGH: HDVW JDWH.\n\nRecover the report code.",
+          "expected_answer": "EAST GATE",
+          "hint": "Starting lead: H -> E. Try the repeated three-letter word `WKH` as `THE`. That suggests shifting every letter back three steps; then read the words after `REPORT CODE`.",
+          "metadata": {
+            "mechanic": "guided-substitution",
+            "chapter_puzzle_number": 3,
+            "web_prompt": "Recover the report code.",
+            "ciphertext": "WKH VDPH OHWWHU DSSHDUV RIWHQ LQ HQJOLVK. WKH PHVVDJH RSHQV ZKHQ BRX WHVW FRPPRQ ZRUGV. UHSRUW FRGH: HDVW JDWH.",
+            "known_mappings": [
+              [
+                "H",
+                "E"
+              ]
+            ],
+            "hint_clue": "known-mappings",
+            "decoded_message": "THE SAME LETTER APPEARS OFTEN IN ENGLISH. THE MESSAGE OPENS WHEN YOU TEST COMMON WORDS. REPORT CODE: EAST GATE.",
+            "raw_solution": "EAST GATE",
+            "game_original": true
           }
         }
       ]

@@ -574,7 +574,12 @@ a {
 
 .mono-block,
 .board-pre,
-.matrix-card {
+.matrix-card,
+.morse-block,
+.cipher-message,
+.frequency-symbol,
+.frequency-count,
+.mapping-chips {
   font-family: "IBM Plex Mono", "SFMono-Regular", Consolas, monospace;
 }
 
@@ -591,6 +596,69 @@ a {
   font-size: 1rem;
   letter-spacing: 0.12em;
   word-break: break-all;
+}
+
+.morse-block {
+  font-size: clamp(1rem, 2.4vw, 1.35rem);
+  letter-spacing: 0.14em;
+  word-break: break-word;
+}
+
+.cipher-message {
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: var(--radius-md);
+  background: rgba(255, 255, 255, 0.04);
+  padding: 0.9rem;
+  letter-spacing: 0.08em;
+  line-height: 1.65;
+}
+
+.frequency-chart {
+  display: grid;
+  gap: 0.55rem;
+}
+
+.frequency-row {
+  display: grid;
+  grid-template-columns: 1.25rem minmax(0, 1fr) 2rem;
+  gap: 0.65rem;
+  align-items: center;
+}
+
+.frequency-symbol,
+.frequency-count {
+  color: var(--ink-soft);
+  font-size: 0.92rem;
+}
+
+.frequency-bar-track {
+  display: block;
+  height: 0.72rem;
+  overflow: hidden;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.07);
+}
+
+.frequency-bar {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #9264fb, #d38cff);
+}
+
+.mapping-chips {
+  display: flex;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+}
+
+.mapping-chips span {
+  display: inline-flex;
+  border: 1px solid rgba(185, 145, 255, 0.24);
+  border-radius: 999px;
+  background: rgba(143, 98, 255, 0.1);
+  padding: 0.5rem 0.85rem;
+  color: var(--ink);
 }
 
 .board-pre {
@@ -696,8 +764,22 @@ a {
 }
 
 .hint-box {
-  white-space: pre-line;
   line-height: 1.65;
+}
+
+.hint-copy {
+  margin: 0;
+  white-space: pre-line;
+}
+
+.hint-box .puzzle-image-frame,
+.hint-clue {
+  margin-top: 0.9rem;
+}
+
+.hint-clue {
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  padding-top: 0.9rem;
 }
 
 .status-box.is-success {

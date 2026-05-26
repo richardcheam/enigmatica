@@ -163,7 +163,11 @@ function toggleHint() {
 
   const isHidden = elements.hintBox.hidden;
   elements.hintBox.hidden = !isHidden;
-  elements.hintBox.textContent = puzzle.hint;
+  if (isHidden) {
+    renderHint(puzzle);
+  } else {
+    elements.hintBox.innerHTML = "";
+  }
   elements.hintButton.textContent = isHidden ? copy.play.hideHint : copy.play.showHint;
 }
 
@@ -375,6 +379,40 @@ function renderPuzzleImages(puzzle) {
   return images;
 }
 
+function renderHint(puzzle) {
+  elements.hintBox.innerHTML = "";
+
+  const hintCopy = document.createElement("p");
+  hintCopy.className = "hint-copy";
+  hintCopy.textContent = puzzle.metadata.web_hint || puzzle.hint;
+  elements.hintBox.append(hintCopy);
+
+  if (puzzle.metadata.hint_mechanic_asset_path && puzzle.metadata.hint_mechanic_asset_exists) {
+    elements.hintBox.append(
+      renderPuzzleImage(
+        puzzle.metadata.hint_mechanic_asset_path,
+        `${puzzle.title} hint mechanic reference`,
+        copy.play.mechanicSnapshot || "Mechanic Reference",
+      ),
+    );
+  }
+
+  if (puzzle.metadata.hint_rule_asset_path && puzzle.metadata.hint_rule_asset_exists) {
+    elements.hintBox.append(
+      renderPuzzleImage(
+        puzzle.metadata.hint_rule_asset_path,
+        `${puzzle.title} hint rule reference`,
+        copy.play.ruleSnapshot,
+      ),
+    );
+  }
+
+  const hintClue = renderHintClue(puzzle);
+  if (hintClue) {
+    elements.hintBox.append(hintClue);
+  }
+}
+
 function renderPuzzleImage(assetPath, altText, label) {
   const frame = document.createElement("div");
   frame.className = "puzzle-image-frame";
@@ -383,6 +421,72 @@ function renderPuzzleImage(assetPath, altText, label) {
     <img src="./${assetPath}" alt="${altText}" />
   `;
   return frame;
+}
+
+function renderFrequencyChart(profile) {
+  const highestCount = profile[0]?.count ?? 1;
+  return profile
+    .map(
+      (row) => `
+        <div class="frequency-row">
+          <span class="frequency-symbol">${row.symbol}</span>
+          <span class="frequency-bar-track">
+            <span class="frequency-bar" style="width: ${(row.count / highestCount) * 100}%"></span>
+          </span>
+          <span class="frequency-count">${row.count}</span>
+        </div>
+      `,
+    )
+    .join("");
+}
+
+function renderHintClue(puzzle) {
+  const panel = document.createElement("div");
+  panel.className = "hint-clue";
+
+  if (puzzle.metadata.hint_clue === "grid-extraction") {
+    const rows = shared.combineGridBlocks(
+      puzzle.metadata.left_block,
+      puzzle.metadata.right_block,
+    );
+    panel.innerHTML = `
+      <div class="clue-grid">
+        <div>
+          <span class="label">${copy.play.clueBoardReference}</span>
+          <pre class="board-pre">${rows
+            .map((row, index) => `${String(index + 1).padStart(2, "0")}: ${row.slice(0, 5)} ${row.slice(5)}`)
+            .join("\n")}</pre>
+        </div>
+        <div>
+          <span class="label">${copy.play.clueSourceClue}</span>
+          <div class="mono-block">${puzzle.metadata.source_clue.join(" ")}</div>
+        </div>
+      </div>
+    `;
+    return panel;
+  }
+
+  if (puzzle.metadata.hint_clue === "frequency-profile") {
+    panel.innerHTML = `
+      <span class="label">${copy.play.clueFrequencyChart}</span>
+      <div class="frequency-chart">${renderFrequencyChart(puzzle.metadata.frequency_profile)}</div>
+    `;
+    return panel;
+  }
+
+  if (puzzle.metadata.hint_clue === "known-mappings") {
+    panel.innerHTML = `
+      <span class="label">${copy.play.clueStartingMappings}</span>
+      <div class="mapping-chips">
+        ${puzzle.metadata.known_mappings
+          .map(([cipherSymbol, plainSymbol]) => `<span>${cipherSymbol} &rarr; ${plainSymbol}</span>`)
+          .join("")}
+      </div>
+    `;
+    return panel;
+  }
+
+  return null;
 }
 
 function renderMechanicClue(puzzle) {
@@ -452,6 +556,42 @@ ${shared.formatMatrix(puzzle.metadata.inverse_key_matrix)}
     return panel;
   }
 
+  if (mechanic === "morse-code") {
+    panel.innerHTML = `
+      <div class="clue-grid">
+        <div>
+          <span class="label">${copy.play.clueTransmission}</span>
+          <div class="morse-block">${puzzle.metadata.encoded_message}</div>
+        </div>
+      </div>
+    `;
+    return panel;
+  }
+
+  if (mechanic === "frequency-analysis") {
+    panel.innerHTML = `
+      <div class="clue-grid">
+        <div>
+          <span class="label">${copy.play.clueEncryptedMessage}</span>
+          <div class="cipher-message">${puzzle.metadata.ciphertext}</div>
+        </div>
+      </div>
+    `;
+    return panel;
+  }
+
+  if (mechanic === "guided-substitution") {
+    panel.innerHTML = `
+      <div class="clue-grid">
+        <div>
+          <span class="label">${copy.play.clueEncryptedMessage}</span>
+          <div class="cipher-message">${puzzle.metadata.ciphertext}</div>
+        </div>
+      </div>
+    `;
+    return panel;
+  }
+
   if (mechanic === "polybius-square") {
     panel.innerHTML = `
       <div class="clue-grid">
@@ -482,7 +622,7 @@ function showStatus(message, tone = "neutral") {
 
 function resetPuzzlePanels() {
   elements.hintBox.hidden = true;
-  elements.hintBox.textContent = "";
+  elements.hintBox.innerHTML = "";
   elements.hintButton.textContent = copy.play.showHint;
   setContinueAvailability(false);
   closeCompletionModal();

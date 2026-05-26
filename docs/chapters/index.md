@@ -16,6 +16,7 @@ Each chapter note should capture:
 
 - [c001 - 12 HOURS LEFT TO LIVE](./c001.md)
 - [c002 - 3 HOURS LEFT TO LIVE](./c002.md)
+- [c003 - 5 MINUTES LEFT TO LIVE](./c003.md)
 
 ## Conventions
 

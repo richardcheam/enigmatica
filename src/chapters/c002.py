@@ -42,13 +42,22 @@ def _format_board(rows: tuple[str, ...]) -> str:
 
 
 def _cli_prompt(encoded: str, instruction: str) -> str:
-    """Render the image-backed puzzle in a terminal-friendly form."""
+    """Render only the source clue before a terminal player requests help."""
 
     return (
-        f"Reference board:\n{_format_board(ALPHANUMERIC_POLYBIUS_ROWS)}\n"
         f"Digit string: {encoded}\n"
         f"\n{instruction}"
     )
+
+
+def _cli_hint(coordinate_order: str) -> str:
+    """Render the checkerboard rule only after a player asks for a hint."""
+
+    direction = {
+        "column-row": "read a pair as column first, then row.",
+        "row-column": "read a pair as row first, then column.",
+    }[coordinate_order]
+    return f"Use this reference board:\n{_format_board(ALPHANUMERIC_POLYBIUS_ROWS)}\n{direction}"
 
 
 def build_puzzle_01() -> Puzzle:
@@ -59,14 +68,15 @@ def build_puzzle_01() -> Puzzle:
         title="Decode the digit string",
         prompt=_cli_prompt(PUZZLE_01_SOURCE_DIGITS, "Recover the hidden word."),
         expected_answer=PUZZLE_01_SOLUTION,
-        hint="For this clue, read a pair as column first, then row.",
+        hint=_cli_hint(PUZZLE_01_COORDINATE_ORDER),
         metadata={
             "mechanic": "alphanumeric-checkerboard",
             "chapter_puzzle_number": 1,
-            "mechanic_asset_path": "assets/chapters/c002/polybius-checkerboard.png",
             "asset_path": "assets/chapters/c002/puzzle-01.png",
-            "rule_asset_path": "assets/chapters/c002/puzzle-01-rule.png",
+            "hint_mechanic_asset_path": "assets/chapters/c002/polybius-checkerboard.png",
+            "hint_rule_asset_path": "assets/chapters/c002/puzzle-01-rule.png",
             "web_prompt": "Recover the hidden word.",
+            "web_hint": "Use the revealed board. For this clue, read each pair as column first, then row.",
             "image_only_clue": True,
             "board_rows": ALPHANUMERIC_POLYBIUS_ROWS,
             "source_digits": PUZZLE_01_SOURCE_DIGITS,
@@ -84,13 +94,14 @@ def build_puzzle_02() -> Puzzle:
         title="Decode the written message",
         prompt=_cli_prompt(PUZZLE_02_SOURCE_DIGITS, "Recover the hidden message."),
         expected_answer=PUZZLE_02_FORMATTED_SOLUTION,
-        hint="For this clue, read a pair as row first, then column.",
+        hint=_cli_hint(PUZZLE_02_COORDINATE_ORDER),
         metadata={
             "mechanic": "alphanumeric-checkerboard",
             "chapter_puzzle_number": 2,
             "asset_path": "assets/chapters/c002/puzzle-02.png",
-            "rule_asset_path": "assets/chapters/c002/puzzle-01-rule.png",
+            "hint_rule_asset_path": "assets/chapters/c002/puzzle-01-rule.png",
             "web_prompt": "Recover the hidden message.",
+            "web_hint": "Use the revealed board. For this clue, read each pair as row first, then column.",
             "image_only_clue": True,
             "board_rows": ALPHANUMERIC_POLYBIUS_ROWS,
             "source_digits": PUZZLE_02_SOURCE_DIGITS,

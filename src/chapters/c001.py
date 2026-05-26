@@ -165,6 +165,8 @@ def build_puzzle_02() -> Puzzle:
             "chapter_puzzle_number": 2,
             "asset_path": "assets/chapters/c001/puzzle-02.png",
             "web_prompt": "Recover the hidden warning.",
+            "image_only_clue": True,
+            "hint_clue": "grid-extraction",
             "left_block": PUZZLE_02_LEFT_BLOCK,
             "right_block": PUZZLE_02_RIGHT_BLOCK,
             "source_clue": PUZZLE_02_SOURCE_CLUE,

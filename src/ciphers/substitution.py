@@ -57,3 +57,19 @@ def is_complete_substitution(mapping: Mapping[str, str]) -> bool:
         set(normalized_mapping.keys()) == set(ascii_uppercase)
         and len(set(normalized_mapping.values())) == len(ascii_uppercase)
     )
+
+
+def rotation_mapping(shift: int) -> dict[str, str]:
+    """Return a complete A-Z substitution mapping rotated by ``shift`` positions."""
+
+    normalized_shift = shift % len(ascii_uppercase)
+    return {
+        letter: ascii_uppercase[(index + normalized_shift) % len(ascii_uppercase)]
+        for index, letter in enumerate(ascii_uppercase)
+    }
+
+
+def decode_substitution(text: str, encryption_mapping: Mapping[str, str]) -> str:
+    """Decode text produced with a plaintext-to-ciphertext substitution mapping."""
+
+    return apply_substitution(text, invert_substitution(encryption_mapping))
