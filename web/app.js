@@ -569,24 +569,36 @@ ${shared.formatMatrix(puzzle.metadata.inverse_key_matrix)}
   }
 
   if (mechanic === "frequency-analysis") {
+    const hasFrequency = puzzle.metadata.frequency_profile && puzzle.metadata.frequency_profile.length > 0;
     panel.innerHTML = `
       <div class="clue-grid">
         <div>
           <span class="label">${copy.play.clueEncryptedMessage}</span>
           <div class="cipher-message">${puzzle.metadata.ciphertext}</div>
         </div>
+        ${hasFrequency ? `
+        <div>
+          <span class="label">${copy.play.clueFrequencyChart}</span>
+          <div class="frequency-chart">${renderFrequencyChart(puzzle.metadata.frequency_profile)}</div>
+        </div>` : ""}
       </div>
     `;
     return panel;
   }
 
   if (mechanic === "guided-substitution") {
+    const hasFrequency = puzzle.metadata.frequency_profile && puzzle.metadata.frequency_profile.length > 0;
     panel.innerHTML = `
       <div class="clue-grid">
         <div>
           <span class="label">${copy.play.clueEncryptedMessage}</span>
           <div class="cipher-message">${puzzle.metadata.ciphertext}</div>
         </div>
+        ${hasFrequency ? `
+        <div>
+          <span class="label">${copy.play.clueFrequencyChart}</span>
+          <div class="frequency-chart">${renderFrequencyChart(puzzle.metadata.frequency_profile)}</div>
+        </div>` : ""}
       </div>
     `;
     return panel;

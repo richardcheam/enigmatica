@@ -46,14 +46,13 @@
           "title": "Find the warning in the board",
           "prompt": "Board:\n01: VL1NK JOLQ3\n02: QCOSF IA4K1\n03: 1MV1F PEGBZ\n04: TARM2 5YFOX\n05: KQWKX OAPPQ\n06: EU3FL DYZPM\n07: MZXIY OYZEX\n08: XYMHQ OUNGL\n09: I1QOF BNDEH\n10: 443VL UPDME\n11: AWELB 21NB2\n12: EAB2H BUOJ3\nSource clue: 14 34 24 96\n\nRecover the hidden warning.",
           "expected_answer": "TRAP",
-          "hint": "The two digits identify a position in the board.",
+          "hint": "The two digits identify a position in the board: first digit is the column, second is the row. Extract the letter at each position to spell the warning.",
           "metadata": {
             "mechanic": "grid-extraction",
             "chapter_puzzle_number": 2,
             "asset_path": "assets/chapters/c001/puzzle-02.png",
             "web_prompt": "Recover the hidden warning.",
-            "image_only_clue": true,
-            "hint_clue": "grid-extraction",
+            "web_hint": "Each two-digit pair identifies a position in the board: the first digit is the column, the second is the row. Extract the letter at each coordinate and join them to spell the warning.",
             "left_block": [
               "VL1NK",
               "QCOSF",
@@ -113,14 +112,14 @@
         {
           "id": "c001-puzzle-03",
           "title": "Use the Hill-cipher inverse matrix",
-          "prompt": "Alphabet: ABCDEFGHIJKLMNOPQRSTUVWXYZ12345\nSupplied inverse matrix:\n  [12  6]\n  [12  2]\nCiphertext blocks: QB RA EO ME\n\nRecover the hidden message.",
+          "prompt": "Alphabet: ABCDEFGHIJKLMNOPQRSTUVWXYZ12345\nSupplied inverse matrix:\n  [12  6]\n  [12  2]\nCiphertext blocks: QB RA EO ME\n\nFor each block, convert the two letters to their numeric values (A=0..5=30), multiply by the inverse matrix modulo 31, convert back to letters, then join all blocks and remove the trailing filler.",
           "expected_answer": "MISSION",
           "hint": "How to use the inverse matrix:\n1. Number the alphabet from 0 to 30: A=0, ..., Z=25, 1=26, ..., 5=30.\n2. Read the ciphertext two characters at a time. For each pair, use its two numbers as a column vector.\n3. Multiply that vector by the supplied inverse matrix. `mod 31` means keep the remainder after division by 31, so every result returns to the alphabet range.\n\nUnrelated example using the same matrix: LB -> OK.\nL=11 and B=1, so the vector is [11, 1].\nFirst letter: (12 x 11 + 6 x 1) = 138; 138 mod 31 = 14; 14 -> O.\nSecond letter: (12 x 11 + 2 x 1) = 134; 134 mod 31 = 10; 10 -> K.\nRepeat that process for each ciphertext block, then remove a final filler `3`.",
           "metadata": {
             "mechanic": "hill-cipher-medium",
             "chapter_puzzle_number": 3,
             "asset_path": "assets/chapters/c001/puzzle-03.png",
-            "web_prompt": "Use the supplied materials to recover the hidden message.",
+            "web_prompt": "Use the inverse matrix to decode the ciphertext blocks.",
             "alphabet": "ABCDEFGHIJKLMNOPQRSTUVWXYZ12345",
             "pad_char": "3",
             "mode": "medium",
@@ -179,10 +178,10 @@
             "mechanic": "alphanumeric-checkerboard",
             "chapter_puzzle_number": 1,
             "asset_path": "assets/chapters/c002/puzzle-01.png",
+            "rule_asset_path": "assets/chapters/c002/puzzle-01-rule.png",
             "hint_mechanic_asset_path": "assets/chapters/c002/polybius-checkerboard.png",
-            "hint_rule_asset_path": "assets/chapters/c002/puzzle-01-rule.png",
             "web_prompt": "Recover the hidden word.",
-            "web_hint": "Use the revealed board. For this clue, read each pair as column first, then row.",
+            "web_hint": "For this clue, read each pair as column first, then row.",
             "image_only_clue": true,
             "board_rows": [
               "ABCDEF",
@@ -196,8 +195,8 @@
             "coordinate_order": "column-row",
             "raw_solution": "RABBIT",
             "asset_exists": true,
-            "hint_mechanic_asset_exists": true,
-            "hint_rule_asset_exists": true
+            "rule_asset_exists": true,
+            "hint_mechanic_asset_exists": true
           }
         },
         {
@@ -210,9 +209,10 @@
             "mechanic": "alphanumeric-checkerboard",
             "chapter_puzzle_number": 2,
             "asset_path": "assets/chapters/c002/puzzle-02.png",
-            "hint_rule_asset_path": "assets/chapters/c002/puzzle-01-rule.png",
+            "rule_asset_path": "assets/chapters/c002/puzzle-01-rule.png",
+            "hint_mechanic_asset_path": "assets/chapters/c002/polybius-checkerboard.png",
             "web_prompt": "Recover the hidden message.",
-            "web_hint": "Use the revealed board. For this clue, read each pair as row first, then column.",
+            "web_hint": "For this clue, read each pair as row first, then column.",
             "image_only_clue": true,
             "board_rows": [
               "ABCDEF",
@@ -226,7 +226,8 @@
             "coordinate_order": "row-column",
             "raw_solution": "MUMSBIRTHDAYMAY29TH",
             "asset_exists": true,
-            "hint_rule_asset_exists": true
+            "rule_asset_exists": true,
+            "hint_mechanic_asset_exists": true
           }
         }
       ]
@@ -234,7 +235,7 @@
     {
       "code": "c003",
       "title": "Chapter 3: 5 MINUTES LEFT TO LIVE",
-      "description": "Chapter 3 inspires an original Morse-code signal and a guided frequency-analysis investigation.",
+      "description": "Chapter 3: decode a Morse signal then crack a Caesar cipher to find the report code.",
       "level_id": "level-c003",
       "chapter_note_path": "docs/chapters/c003.md",
       "chapter_note_url": "https://github.com/richardcheam/enigmatica/blob/main/docs/chapters/c003.md",
@@ -258,16 +259,16 @@
         },
         {
           "id": "c003-puzzle-02",
-          "title": "Find the dominant symbol",
-          "prompt": "Encrypted message:\nWKH VDPH OHWWHU DSSHDUV RIWHQ LQ HQJOLVK. WKH PHVVDJH RSHQV ZKHQ BRX WHVW FRPPRQ ZRUGV. UHSRUW FRGH: HDVW JDWH.\n\nEnter the ciphertext letter that appears most frequently.",
-          "expected_answer": "H",
-          "hint": "Ranked letter counts:\n  H: 17 (19.10%)\n  W: 10 (11.24%)\n  V:  9 (10.11%)\n  R:  8 ( 8.99%)\n  D:  6 ( 6.74%)\n  Q:  6 ( 6.74%)\n  U:  5 ( 5.62%)\n  K:  4 ( 4.49%)\n  P:  4 ( 4.49%)\n  S:  4 ( 4.49%)\n\nThe tallest bar identifies the repeated ciphertext symbol. Frequency provides evidence, not a guaranteed plaintext substitution.",
+          "title": "Decode the encrypted message",
+          "prompt": "Encrypted message:\nWKH VDPH OHWWHU DSSHDUV RIWHQ LQ HQJOLVK. WKH PHVVDJH RSHQV ZKHQ BRX WHVW FRPPRQ ZRUGV. UHSRUW FRGH: HDVW JDWH.\n\nDecode the full message.",
+          "expected_answer": "EAST GATE",
+          "hint": "Ranked letter counts:\n  H: 17 (19.10%)\n  W: 10 (11.24%)\n  V:  9 (10.11%)\n  R:  8 ( 8.99%)\n  D:  6 ( 6.74%)\n  Q:  6 ( 6.74%)\n  U:  5 ( 5.62%)\n  K:  4 ( 4.49%)\n  P:  4 ( 4.49%)\n  S:  4 ( 4.49%)\n\nClue 1 \u2014 In English, E is the most common letter. H appears most often in the encrypted message, so H likely stands for E.\nClue 2 \u2014 WKH appears as a word. THE is the most common three-letter word in English (W->T, K->H, H->E).\nBoth clues point to a Caesar cipher: shift each letter back by 3.",
           "metadata": {
             "mechanic": "frequency-analysis",
             "chapter_puzzle_number": 2,
-            "web_prompt": "Which ciphertext letter appears most often?",
-            "web_hint": "Use the letter-frequency chart below. The tallest bar identifies the most repeated ciphertext symbol; it is evidence, not a guaranteed substitution.",
             "ciphertext": "WKH VDPH OHWWHU DSSHDUV RIWHQ LQ HQJOLVK. WKH PHVVDJH RSHQV ZKHQ BRX WHVW FRPPRQ ZRUGV. UHSRUW FRGH: HDVW JDWH.",
+            "web_prompt": "Decode the encrypted message to find the report code at the end.",
+            "web_hint": "Clue 1 \u2014 In English, E is the most common letter.\nClue 2 \u2014 WKH appears as a word, so think of the most common three-letter word in English\nBoth clues point to a Caesar cipher. Recap: a Caesar cipher shifts each letter by a fixed amount",
             "frequency_profile": [
               {
                 "symbol": "H",
@@ -320,27 +321,9 @@
                 "percentage": 4.49
               }
             ],
-            "hint_clue": "frequency-profile",
-            "raw_solution": "H",
-            "game_original": true
-          }
-        },
-        {
-          "id": "c003-puzzle-03",
-          "title": "Recover the report code",
-          "prompt": "Encrypted message:\nWKH VDPH OHWWHU DSSHDUV RIWHQ LQ HQJOLVK. WKH PHVVDJH RSHQV ZKHQ BRX WHVW FRPPRQ ZRUGV. UHSRUW FRGH: HDVW JDWH.\n\nRecover the report code.",
-          "expected_answer": "EAST GATE",
-          "hint": "Starting lead: H -> E. Try the repeated three-letter word `WKH` as `THE`. That suggests shifting every letter back three steps; then read the words after `REPORT CODE`.",
-          "metadata": {
-            "mechanic": "guided-substitution",
-            "chapter_puzzle_number": 3,
-            "web_prompt": "Recover the report code.",
-            "ciphertext": "WKH VDPH OHWWHU DSSHDUV RIWHQ LQ HQJOLVK. WKH PHVVDJH RSHQV ZKHQ BRX WHVW FRPPRQ ZRUGV. UHSRUW FRGH: HDVW JDWH.",
             "known_mappings": [
-              [
-                "H",
-                "E"
-              ]
+              "W",
+              "T"
             ],
             "hint_clue": "known-mappings",
             "decoded_message": "THE SAME LETTER APPEARS OFTEN IN ENGLISH. THE MESSAGE OPENS WHEN YOU TEST COMMON WORDS. REPORT CODE: EAST GATE.",

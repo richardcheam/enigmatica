@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from src.chapters.base import Chapter
-from src.ciphers.frequency import frequency_profile, most_frequent_symbol
+from src.ciphers.frequency import frequency_profile
 from src.ciphers.morse import decode_morse, encode_morse
 from src.ciphers.substitution import (
     apply_substitution,
@@ -27,8 +27,6 @@ PUZZLE_02_PLAINTEXT = (
 PUZZLE_02_ENCRYPTION_MAPPING = rotation_mapping(3)
 PUZZLE_02_CIPHERTEXT = apply_substitution(PUZZLE_02_PLAINTEXT, PUZZLE_02_ENCRYPTION_MAPPING)
 PUZZLE_02_PROFILE = frequency_profile(PUZZLE_02_CIPHERTEXT, limit=10)
-PUZZLE_02_SOLUTION = most_frequent_symbol(PUZZLE_02_CIPHERTEXT) or ""
-
 PUZZLE_03_DECODED_MESSAGE = decode_substitution(
     PUZZLE_02_CIPHERTEXT,
     PUZZLE_02_ENCRYPTION_MAPPING,
@@ -67,60 +65,36 @@ def build_puzzle_01() -> Puzzle:
 
 
 def build_puzzle_02() -> Puzzle:
-    """Build the frequency-observation puzzle."""
+    """Build the substitution decoding puzzle."""
 
     return Puzzle(
         id="c003-puzzle-02",
-        title="Find the dominant symbol",
+        title="Decode the encrypted message",
         prompt=(
             f"Encrypted message:\n{PUZZLE_02_CIPHERTEXT}\n\n"
-            "Enter the ciphertext letter that appears most frequently."
+            "Decode the full message."
         ),
-        expected_answer=PUZZLE_02_SOLUTION,
+        expected_answer=PUZZLE_03_SOLUTION,
         hint=(
             f"Ranked letter counts:\n{_format_frequency_profile(PUZZLE_02_PROFILE)}\n\n"
-            "The tallest bar identifies the repeated ciphertext symbol. Frequency provides "
-            "evidence, not a guaranteed plaintext substitution."
+            "Clue 1 — In English, E is the most common letter. H appears most often in the "
+            "encrypted message, so H likely stands for E.\n"
+            "Clue 2 — WKH appears as a word. THE is the most common three-letter word "
+            "in English (W->T, K->H, H->E).\n"
+            "Both clues point to a Caesar cipher: shift each letter back by 3."
         ),
         metadata={
             "mechanic": "frequency-analysis",
             "chapter_puzzle_number": 2,
-            "web_prompt": "Which ciphertext letter appears most often?",
+            "ciphertext": PUZZLE_02_CIPHERTEXT,
+            "web_prompt": "Decode the encrypted message to find the report code at the end.",
             "web_hint": (
-                "Use the letter-frequency chart below. The tallest bar identifies the most "
-                "repeated ciphertext symbol; it is evidence, not a guaranteed substitution."
+                "Clue 1 — In English, E is the most common letter.\n"
+                "Clue 2 — WKH appears as a word, so think of the most common three-letter word in English.\n"
+                "Both clues point to a Caesar cipher. Recap: a Caesar cipher shifts each letter by a fixed amount."
             ),
-            "ciphertext": PUZZLE_02_CIPHERTEXT,
             "frequency_profile": PUZZLE_02_PROFILE,
-            "hint_clue": "frequency-profile",
-            "raw_solution": PUZZLE_02_SOLUTION,
-            "game_original": True,
-        },
-    )
-
-
-def build_puzzle_03() -> Puzzle:
-    """Build the guided substitution recovery puzzle."""
-
-    return Puzzle(
-        id="c003-puzzle-03",
-        title="Recover the report code",
-        prompt=(
-            f"Encrypted message:\n{PUZZLE_02_CIPHERTEXT}\n\n"
-            "Recover the report code."
-        ),
-        expected_answer=PUZZLE_03_SOLUTION,
-        hint=(
-            "Starting lead: H -> E. Try the repeated three-letter word `WKH` as `THE`. "
-            "That suggests shifting every letter back three steps; then read the words "
-            "after `REPORT CODE`."
-        ),
-        metadata={
-            "mechanic": "guided-substitution",
-            "chapter_puzzle_number": 3,
-            "web_prompt": "Recover the report code.",
-            "ciphertext": PUZZLE_02_CIPHERTEXT,
-            "known_mappings": (("H", "E"),),
+            "known_mappings": (("W", "T")),
             "hint_clue": "known-mappings",
             "decoded_message": PUZZLE_03_DECODED_MESSAGE,
             "raw_solution": PUZZLE_03_SOLUTION,
@@ -132,7 +106,7 @@ def build_puzzle_03() -> Puzzle:
 def build_puzzles() -> list[Puzzle]:
     """Build all game-original puzzles inspired by chapter 3."""
 
-    return [build_puzzle_01(), build_puzzle_02(), build_puzzle_03()]
+    return [build_puzzle_01(), build_puzzle_02()]
 
 
 def build_level() -> Level:
@@ -142,8 +116,7 @@ def build_level() -> Level:
         id="level-c003",
         title=CHAPTER_TITLE,
         description=(
-            "Chapter 3 mentions Morse code and frequency analysis rather than giving a full "
-            "puzzle, so this level adapts both techniques into original playable challenges."
+            "Decode a Morse signal, then crack a Caesar cipher to uncover the report code."
         ),
         puzzles=build_puzzles(),
         chapter_code=CHAPTER_CODE,
@@ -161,15 +134,12 @@ def render_demo() -> str:
             f"Transmission: {PUZZLE_01_MORSE}",
             f"Decoded: {PUZZLE_01_SOLUTION}",
             "",
-            "Puzzle 2 - Frequency evidence",
+            "Puzzle 2 - Substitution decode",
             f"Ciphertext: {PUZZLE_02_CIPHERTEXT}",
-            _format_frequency_profile(PUZZLE_02_PROFILE),
-            f"Most frequent symbol: {PUZZLE_02_SOLUTION}",
+            f"Starting lead: H -> E, WKH -> THE (Caesar shift 3)",
+            f"Decoded: {PUZZLE_03_DECODED_MESSAGE}",
             "",
-            "Puzzle 3 - Guided substitution",
-            "Starting lead: H -> E",
-            f"Decoded message: {PUZZLE_03_DECODED_MESSAGE}",
-            f"Report code: {PUZZLE_03_SOLUTION}",
+            f"Report code from message: {PUZZLE_03_SOLUTION}",
         ]
     )
 
@@ -178,8 +148,7 @@ CHAPTER = Chapter(
     code=CHAPTER_CODE,
     title=CHAPTER_TITLE,
     description=(
-        "Chapter 3 inspires an original Morse-code signal and a guided frequency-analysis "
-        "investigation."
+        "Chapter 3: decode a Morse signal then crack a Caesar cipher to find the report code."
     ),
     build_level=build_level,
     render_demo=render_demo,

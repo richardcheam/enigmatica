@@ -680,6 +680,7 @@ a {
   background: rgba(255, 255, 255, 0.04);
   padding: 0.9rem;
   white-space: pre-wrap;
+  word-break: break-all;
   line-height: 1.6;
 }
 

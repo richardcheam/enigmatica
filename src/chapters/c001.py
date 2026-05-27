@@ -159,14 +159,13 @@ def build_puzzle_02() -> Puzzle:
             "\nRecover the hidden warning."
         ),
         expected_answer=PUZZLE_02_SOLUTION,
-        hint="The two digits identify a position in the board.",
+        hint="The two digits identify a position in the board: first digit is the column, second is the row. Extract the letter at each position to spell the warning.",
         metadata={
             "mechanic": "grid-extraction",
             "chapter_puzzle_number": 2,
             "asset_path": "assets/chapters/c001/puzzle-02.png",
             "web_prompt": "Recover the hidden warning.",
-            "image_only_clue": True,
-            "hint_clue": "grid-extraction",
+            "web_hint": "Each two-digit pair identifies a position in the board: the first digit is the column, the second is the row. Extract the letter at each coordinate and join them to spell the warning.",
             "left_block": PUZZLE_02_LEFT_BLOCK,
             "right_block": PUZZLE_02_RIGHT_BLOCK,
             "source_clue": PUZZLE_02_SOURCE_CLUE,
@@ -187,7 +186,9 @@ def build_puzzle_03() -> Puzzle:
             "Supplied inverse matrix:\n"
             f"{_format_matrix(PUZZLE_03_INVERSE_KEY)}\n"
             f"Ciphertext blocks: {_format_blocks(PUZZLE_03_CIPHERTEXT)}\n"
-            "\nRecover the hidden message."
+            "\nFor each block, convert the two letters to their numeric values (A=0..5=30), "
+            "multiply by the inverse matrix modulo 31, convert back to letters, then join "
+            "all blocks and remove the trailing filler."
         ),
         expected_answer=PUZZLE_03_SOLUTION,
         hint=(
@@ -207,7 +208,7 @@ def build_puzzle_03() -> Puzzle:
             "mechanic": "hill-cipher-medium",
             "chapter_puzzle_number": 3,
             "asset_path": "assets/chapters/c001/puzzle-03.png",
-            "web_prompt": "Use the supplied materials to recover the hidden message.",
+            "web_prompt": "Use the inverse matrix to decode the ciphertext blocks.",
             "alphabet": DEFAULT_HILL_ALPHABET,
             "pad_char": DEFAULT_PAD_CHAR,
             "mode": "medium",
